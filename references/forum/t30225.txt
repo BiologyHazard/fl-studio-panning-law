@@ -1,5 +1,0 @@
-Well, for most projects, I've used Circular Panning Law, obviously since there's an even response there, but I wanted to try something different. So I tried to mix a track with linear panning law instead. It didn't just affect the way panning was done, but it also affected other things (like stereo widening for instance), and my mix sounded harder (not in a good way). Now, here is my question. Who here prefers Circular Panning Law and who here prefers Linear Panning Law? And if you can think of any advantages/disadvantages one has over the other, list them here. (Well, constant apparent volume is an advantage that Circular has over Linear).
-http://www.youtube.com/watch?v=xnkyQsRiJfI
-I think Gol said in another thread about this t...
-i prefer the rhomboid panning law
-
