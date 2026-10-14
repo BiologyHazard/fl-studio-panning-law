@@ -57,7 +57,7 @@ uv run fl-studio-pan-rule eval 0.5   # 求某个 pan 位置的输出与矩阵
 ```python
 from fl_studio_pan_rule import process, matrix, PEAK_GAIN
 
-left_out, right_out = process(0.5, 1.0, 0.0)   # -> (0.5411961, 0.2997281)
+left_out, right_out = process(0.5, 1.0, 0.0)  # -> (0.5411961, 0.2997281)
 ```
 
 `verify` 会跑四项独立检查，任一不成立都会 FAIL：

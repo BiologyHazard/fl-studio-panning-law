@@ -71,7 +71,9 @@ class Wav:
             raw = np.frombuffer(self.data, dtype="<i2", count=n * ch)
             return raw.reshape(n, ch) / 32768.0
         if self.sub_format == FORMAT_PCM and self.bits == 24:
-            b = np.frombuffer(self.data, dtype=np.uint8, count=n * ch * 3).reshape(-1, 3)
+            b = np.frombuffer(self.data, dtype=np.uint8, count=n * ch * 3).reshape(
+                -1, 3
+            )
             v = (
                 b[:, 0].astype(np.int32)
                 | (b[:, 1].astype(np.int32) << 8)

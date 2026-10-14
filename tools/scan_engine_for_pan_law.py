@@ -29,7 +29,6 @@ Needs the optional dependency group::
 from __future__ import annotations
 
 import argparse
-import struct
 from pathlib import Path
 
 import numpy as np
@@ -123,9 +122,9 @@ def main() -> int:
             count = (len(blob) - shift) // 4
             if count <= 0:
                 continue
-            words = np.frombuffer(
-                blob[shift : shift + count * 4], dtype="<u4"
-            ).astype(np.uint32)
+            words = np.frombuffer(blob[shift : shift + count * 4], dtype="<u4").astype(
+                np.uint32
+            )
             offsets = shift + 4 * np.arange(count, dtype=np.int64)
             # disp32 is the last field, so the instruction ends right after it
             resolved = s["va"] + offsets + 4 + words.astype(np.int32).astype(np.int64)

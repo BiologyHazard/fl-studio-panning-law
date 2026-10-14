@@ -9,24 +9,26 @@ from . import analysis, rule
 
 __all__ = ["main"]
 
-TABLE_PANS = (-1.0, -0.75, -0.519251, -0.5, -0.255318, -0.25, 0.0,
-              0.25, 0.5, 0.75, 1.0)
+TABLE_PANS = (-1.0, -0.75, -0.519251, -0.5, -0.255318, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0)
 
 
 def _table(points) -> None:
-    header = (f"  {'pan':>7}  {'theta':>8}  {'A':>8}  {'B':>8} |"
-              f" {'gLL':>9} {'gLR':>9} {'gRL':>9} {'gRR':>9}")
+    header = (
+        f"  {'pan':>7}  {'theta':>8}  {'A':>8}  {'B':>8} |"
+        f" {'gLL':>9} {'gLR':>9} {'gRL':>9} {'gRR':>9}"
+    )
     print(header)
     print("  " + "-" * (len(header) - 2))
     for pan in points:
         theta = float(rule.theta(pan))
         a, b = (float(v) for v in rule.circular_gains(pan))
         g_ll, g_lr, g_rl, g_rr = (float(v) for v in rule.gains(pan))
-        print(f"  {pan:+7.4f}  {theta:8.6f}  {a:+8.6f}  {b:+8.6f} |"
-              f" {g_ll:+9.6f} {g_lr:+9.6f} {g_rl:+9.6f} {g_rr:+9.6f}")
+        print(
+            f"  {pan:+7.4f}  {theta:8.6f}  {a:+8.6f}  {b:+8.6f} |"
+            f" {g_ll:+9.6f} {g_lr:+9.6f} {g_rl:+9.6f} {g_rr:+9.6f}"
+        )
     print()
-    print("  theta = (pan + 1) * pi/4,  A = sqrt(2)cos(theta),"
-          "  B = sqrt(2)sin(theta)")
+    print("  theta = (pan + 1) * pi/4,  A = sqrt(2)cos(theta),  B = sqrt(2)sin(theta)")
     print("  pan <= 0 :  L' = A*((1+B)/2*L + (1-B)/2*R),  R' = B*R")
     print("  pan >= 0 :  L' = A*L,  R' = B*((1+A)/2*R + (1-A)/2*L)")
 
@@ -46,8 +48,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="fl-studio-pan-rule",
         description="FL Studio mixer-track pan rule for stereo signals "
-                    "(reverse-engineered). 'verify' re-runs every check against "
-                    "the bundled renders.",
+        "(reverse-engineered). 'verify' re-runs every check against "
+        "the bundled renders.",
     )
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("verify", help="re-run all verification checks (default)")

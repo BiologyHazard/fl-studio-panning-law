@@ -13,9 +13,9 @@ def load_wave(path: str | Path):
         "Only support stereo wave file"
     )
     samples = audio_data.shape[0]
-    length = samples / sample_rate
+    samples / sample_rate
     l, r = audio_data[:, 0], audio_data[:, 1]
-    mean = (l + r) / 2
+    (l + r) / 2
 
     for i in range(sample_rate * 8 + 1):
         ls = l[i]

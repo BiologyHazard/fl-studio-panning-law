@@ -21,19 +21,19 @@ from . import rule
 from .wav import Wav
 
 __all__ = [
-    "project_root",
-    "SWEEP_FRAMES",
     "RENDER_2024",
-    "RENDER_SINE",
     "RENDER_OTHER",
-    "load_sweep",
+    "RENDER_SINE",
+    "SWEEP_FRAMES",
+    "format_report",
     "invert_theta",
-    "rule_fit",
+    "load_sweep",
     "mono_power",
+    "project_root",
     "rejection",
     "ripple",
+    "rule_fit",
     "verify_all",
-    "format_report",
 ]
 
 SWEEP_FRAMES = 384000  # 8.000 s at 48 kHz = the length of the DC source
@@ -143,9 +143,9 @@ def rule_fit(path: str | Path | None = None, frames: int = SWEEP_FRAMES) -> dict
 
     # law-specific, parameter-free prediction of R from L on the right half
     second = slice(frames // 2, frames)
-    predicted_right = (1.0 - left[second]) * np.sqrt(
-        np.maximum(2.0 - left[second] ** 2, 0.0)
-    ) / 2.0
+    predicted_right = (
+        (1.0 - left[second]) * np.sqrt(np.maximum(2.0 - left[second] ** 2, 0.0)) / 2.0
+    )
     err = np.abs(predicted_right - right[second])
     loud = np.abs(right[second]) > 0.1
     result["closed_form_R_from_L"] = {
@@ -216,8 +216,9 @@ def rejection(path: str | Path | None = None) -> dict:
     }
 
 
-def ripple(path: str | Path | None = None, frames: int = SWEEP_FRAMES,
-           sample_rate: int = 48000) -> dict:
+def ripple(
+    path: str | Path | None = None, frames: int = SWEEP_FRAMES, sample_rate: int = 48000
+) -> dict:
     """Measure how far the rendered automation timeline departs from linear.
 
     Uses the *forward* residual ``measured - law(nominal linear ramp)``, which
@@ -249,7 +250,7 @@ def ripple(path: str | Path | None = None, frames: int = SWEEP_FRAMES,
 
 def verify_all() -> dict:
     """Run every check and return the results."""
-    left, _ = load_sweep(render(*RENDER_2024))
+    _left, _ = load_sweep(render(*RENDER_2024))
     return {
         "rule_fit": rule_fit(),
         "mono_power": mono_power(),

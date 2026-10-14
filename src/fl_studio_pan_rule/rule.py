@@ -38,15 +38,15 @@ import math
 import numpy as np
 
 __all__ = [
-    "SQRT2",
     "PEAK_GAIN",
     "PEAK_PAN",
-    "theta",
+    "SQRT2",
     "circular_gains",
     "gains",
     "matrix",
-    "process",
     "peak",
+    "process",
+    "theta",
 ]
 
 SQRT2 = math.sqrt(2.0)
