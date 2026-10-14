@@ -93,10 +93,20 @@ p ≥ 0 :  gLL = cosφ − sinφ              ,  gLR = 0
 | 用哪个 θ(t) | L 通道最大误差 | L 最大相对误差 | R 通道最大误差 |
 |---|---|---|---|
 | 名义线性斜坡 `p = 2i/383999 − 1` | 6.46e-05 | 6.2e-04 | 5.38e-05 |
-| **从数据反解出的真实 θ(i)** | **9.45e-08** | **1.0e-07** | 8.41e-06 |
+| **从数据反解出的真实 θ(i)** | **7.44e-08** | **1.0e-07** | 8.41e-06 |
 
 即：**给定真实 θ，规则与渲染结果吻合到 float32 精度**。剩下的 6.5e-05 全部来自
 自动化时间轴自身的抖动（见第 4 节），与 Pan 规则无关。
+
+另有一项**完全没有自由参数**的闭合式检验：右半区上 `A = L`（实测）且
+`B = √(2 − L²)`，于是规则单凭实测的 `L` 就能预言 `R`
+
+```
+R = (1 − L)·√(2 − L²) / 2
+```
+
+192000 帧上 `R` 的最大误差 **8.40e-06**（相对 5.2e-05）。这个式子不含任何拟合常数，
+所以它能直接证伪规则的形状，而不是又一次"拟合成功"。
 
 ### 3.2 独立交叉验证
 
@@ -170,12 +180,14 @@ peakL² + peakR² :  min 0.999999   max 1.001971   mean 1.001219   std 5.80e-04
 
 ---
 
-## 4. 残留：自动化时间轴的微小波纹（≈ −84 dB）
+## 4. 残留：自动化时间轴的微小波纹（≈ −78 dB ptp）
 
-把 θ 从数据里逐帧反解后，它与"完全线性"之间存在一个**平滑**的周期波纹：
+用**前向**残差 `实测 − 规则(名义线性斜坡)` 来量（不需要反解，因此处处良态；
+若先反解 θ 再比较，在左半区峰值附近和极右端 `dL/dθ → 0` 会把 float32 舍入放大成
+假的抖动）：
 
-- 幅度：θ 上约 ±4.1e-05 rad（换算到增益约 ±5.9e-05，约 **−84 dB**）
-- 周期：约 **750 帧 @48 kHz = 15.625 ms**（384000 帧共 512 个周期）
+- 幅度：峰峰值 **1.213e-04**（≈ **−78.3 dB** ptp），rms 3.05e-05
+- 周期：主频 **750 帧 @48 kHz = 15.625 ms**（384000 帧共 512 个周期）
 - 相位只依赖帧序号、与 pan 位置无关（左半区与右半区同相位）
 
 这解释了为什么此前用正弦/多项式拟合永远得不到"完美结论"：**规则本身是精确的，
@@ -203,24 +215,22 @@ peakL² + peakR² :  min 0.999999   max 1.001971   mean 1.001219   std 5.80e-04
 
 ---
 
-## 6. 文件清单
-
-脚本（均在 `2026-10-15研究/`，依赖 `.venv`）：
-
-| 脚本 | 用途 |
-|---|---|
-| `wavlib.py` | 零依赖 RIFF/WAV 解析（按 float32 原样解码，避免解码器重采样） |
-| `extract.py` | 从渲染里抽出 (p, L, R) 曲线 → `curve_L.npy` / `curve_R.npy` |
-| `invert_theta.py` | 由 L 反解真实 θ(i) |
-| `theta_structure.py` / `theta_wobble.py` / `theta_fine.py` | 分析 θ(t) 的线性度与波纹 |
-| `final_verify.py` | 闭式规则的完整验证 + 性质检查 |
-| `cross_check.py` / `cross_check2.py` | 另外三份渲染的交叉验证（含等功率实测与证伪实验） |
-| `binrecon.py` / `binrecon2.py` | `FLEngine_x64.dll` 静态侦察（字符串、引用、浮点表） |
-| `参考资料/` | 官方手册摘录、论坛帖、本地语言包条目、官方 pan law 曲线图 |
-
-复现（用项目根目录的 `.venv`）：
+## 6. 代码与数据的位置
 
 ```powershell
-& ".venv\Scripts\python.exe" "2026-10-15研究\final_verify.py"
-& ".venv\Scripts\python.exe" "2026-10-15研究\cross_check2.py"
+uv sync                                   # 建环境
+uv run fl-studio-pan-rule verify          # 重跑第 3 节的全部检查（PASS/FAIL）
+uv run fl-studio-pan-rule table           # 打印增益表
+uv run fl-studio-pan-rule eval 0.5        # 求某个 pan 位置的输出与矩阵
 ```
+
+| 位置 | 内容 |
+|---|---|
+| `src/fl_studio_pan_rule/rule.py` | ★ 规则本身（`process` / `matrix` / `gains` / `peak`） |
+| `src/fl_studio_pan_rule/analysis.py` | 四项检查：`rule_fit` / `mono_power` / `rejection` / `ripple`，含 `invert_theta` |
+| `src/fl_studio_pan_rule/wav.py` | 零依赖 RIFF/WAVE 读取（按 float32 原样解码，避免解码器重采样） |
+| `src/fl_studio_pan_rule/cli.py` | 命令行入口 |
+| `tools/scan_engine_for_pan_law.py` | 在 `FLEngine_x64.dll` 里找 pan 代码（未成功，见文件头说明与第 5 节） |
+| `references/` | 官方手册摘录、论坛帖、引擎 UI 字符串、中文语言包条目、官方 pan law 曲线图 |
+| `2023-06-21测试/`、`2024-09-19测试/` | 原始素材、渲染与 FLP，保持原样未动 |
+| `2024-09-19测试/拟合.py` | 2024 年当年的拟合尝试（依赖同目录的 `output.txt` / `P.txt`） |

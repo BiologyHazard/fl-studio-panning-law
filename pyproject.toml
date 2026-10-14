@@ -1,7 +1,7 @@
 [project]
 name = "fl-studio-pan-rule"
 version = "0.1.0"
-description = "Add your description here"
+description = "Reverse-engineered FL Studio mixer-track pan rule for stereo signals"
 readme = "README.md"
 authors = [
     { name = "BioHazard", email = "3482991796@qq.com" }
@@ -16,6 +16,13 @@ dependencies = [
 
 [project.scripts]
 fl-studio-pan-rule = "fl_studio_pan_rule:main"
+
+[project.optional-dependencies]
+# only needed by tools/scan_engine_for_pan_law.py
+reverse-engineering = [
+    "capstone>=5.0.9",
+    "pefile>=2024.8.26",
+]
 
 [build-system]
 requires = ["uv_build>=0.13.0,<0.14.0"]
