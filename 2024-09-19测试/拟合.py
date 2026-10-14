@@ -1,12 +1,13 @@
 from pathlib import Path
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy.optimize import curve_fit
 
 sample_rate = 48000
 duration = 8
 
-path = Path('output.txt')
+path = Path("output.txt")
 
 
 def sine_func(x, A, B, C, D):
@@ -28,7 +29,7 @@ r2r = l2l[::-1]
 
 after_l = l2l + r2l
 after_r = l2r + r2r
-P = after_l ** 2 + after_r ** 2
+P = after_l**2 + after_r**2
 # print(*P, sep='\n')
 # exit()
 
@@ -66,9 +67,9 @@ plt.plot(ts, r2r, label="r2r")
 # plt.plot(ts, P, label='P')
 # plt.plot(ts, y_fit, 'r-', label=f"fit: A={A_fit}, B={B_fit}, C={C_fit}, D={D_fit}")
 # plt.plot(ts, np.arcsin(l2l / np.sqrt(2)) * 2 / np.pi, 'g-', label='arcsin')
-plt.xlabel('p')
-plt.ylabel('v')
+plt.xlabel("p")
+plt.ylabel("v")
 plt.minorticks_on()
-plt.grid(which='both')
+plt.grid(which="both")
 plt.legend()
 plt.show()
