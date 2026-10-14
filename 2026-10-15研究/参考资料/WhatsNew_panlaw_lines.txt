@@ -1,0 +1,158 @@
+10970 The audio clip list in the Picker Panel is not updated after rendering the pattern
+4620 Added "Ungroup selected" item in popup menu for patterns in the picker panel
+10336 Open plugin performance monitor window when the user double clicks the CPU panel
+10208 PanOMatic: internal modulation is shown on the XY control
+10613 Date in news panel can be too long for the available space
+10580 Fire: Notes played in drum omni mode are not displayed in the hint panel
+10564 News panel doesn't show any items
+10473 FLEX: Master Filter type isn't saved when the Master Filter pannel is locked
+10415 Mini Piano Roll in the channel rack displays the wrong bar count in the hint panel
+10017 Visual artefacts resizing a collapsed panel in the channel settings window
+10092 FLEX: pack browser doesn't resize to full height when the preview image panel is hidden
+9408 Scripting: changing values of X and Y modulation are not reflected in the hint panel
+9490 Can't drop a clip from the picker panel on the last playlist
+9468 Renaming audio and automation clips in the playlist doesn't immediately update the picker panel
+9506 Scripting: get/set channel Volume/Pan should respect channel groups
+9101 Drag line shows in picker panel after scrolling and then selecting an item
+9102 Dropping multiple items in the picker panel on their original position behaves strangely
+9099 Middle-click in the picker panel doesn't reset the selection but adds the item to it
+8951 Automation clip preview in the picker panel doesn't always update when it should
+Added link to news page in news panel menu
+Ampersand in project names are not shown on the hint panel
+Dropping a MIDI file on the picker panel creates an audio clip
+Previewing in the picker panel disables "select from Playlist / channel rack"
+Text in the picker panel doesn't change color over a similar background color, in high visibility mode
+The scroll bar for the picker panel is not always painted when the program starts
+PanOMatic: missing hint on the Speed control
+Edison: denoiser pans the sample when envelope set to max
+Crash when deleting all patterns and automations in picker panel
+Output monitor panel on toolbar doesn't show any activity when it's shown after it was hidden
+FLEX: "missing preset" panel's download button can incorrectly triggers multiple downloads
+Dropping a clip from the picker panel on a PL track header doesn't create an audio track
+Fruity Send: pan and volume knobs don't have a hint
+Automation and audio clips can not be selected in the picker panel when they are zipped in the CR
+Selecting an audio clip doesn't select the audio tab in the picker panel
+CPU panel is repainted when hidden
+Invalid channel index error when selecting a pattern clip in the picker panel
+PL: clicking on a clip in a multiple selection doesn't select the corresponding item in the picker panel
+Right-click on an audio clip in the picker panel will focus the channel rack (when it's detached)
+DirectWave: user interface breaks up in full screen when the browser panel is hidden
+Shift + click in the picker panel doesn't select all associated channels in the CR
+Shift + click on an item in the picker panel will open the rename dialog for it
+Fruity Love Philter Editor targets and Articulator parts not labeled in Hint Panel (macOS)
+Graph editor doesn't update the event panel in the PR when editing parameters
+Right-click on an audio clip in the picker panel opens the channel rack if it was hidden
+FPS counter is now on the CPU panel, can be shown instead of the voice count
+Crash dragging items in the picker panel
+Picker panel doesn't switch to the audio clip tab when audio is dropped on a playlist track header
+Picker panel instead of the playlist scrolls when something is dragged to the bottom of the playlist
+Unlock controls on the about panel are in the wrong location
+Collapsed panels in various dialog windows are now open by default
+Access violation when dragging to the Playlist and the Picker Panel is hidden
+Picker panel: patterns aren't refreshed when they become empty
+Picker panel: selecting many patterns is slow
+PL: drop audio on picker panel creates a linked track
+Access violation during drag and drop from picker panel to playlist
+List of audio clips in the picker panel is not updated when a plugin sends audio to the PL
+Clicking on a clip in the playlist doesn't deselect items in the picker panel
+Name of audio clips in the picker panel is not updated when the name is changed in the channel rack
+Crash clicking on a channel button when the picker panel is hidden
+Rendered and consolidated clips can't be reordered in the picker panel
+Crash dragging items from the picker panel to the playlist
+CPU panel popup menu doesn't always show up
+Picker panel: Quick render pattern doesn't switch to audio clips tab when done
+Playlist: can't drag clips to the last position of the picker panel
+Drag and drop to move items in the picker panel doesn't work for multiple selection
+Toolbar:Online panel and Downloader button are now separate items
+PL: clips are not selected in the picker panel when they're dragged around
+News panel is empty until clicked
+Harmor: visual feedback panel scaling is saved in the plugin settings
+PL: problem with track collapse/expand icon and text ellipsis
+PL: drag and drop issues in picker panel
+Can't scroll by dragging in picker panel at maximum height
+Picker panel: "Select from playlist / channel rack" option to select clips when clicked on in PL and CR
+FPC: envelope editor hidden behind layer panel
+Picker panel: odd behaviour with ctrl+click and a selection
+Dock panels open when mixer tracks are assigned to them
+Picker panel items only show markers after a certain item height
+Picker panel: crash selecting pattern with shift+click
+Picker panel: selecting and deselecting patterns or clips doesn't always work
+Picker panel: bug in clone function
+Can't dock single row panels on both lines next to a double row panel on the bottom dock area
+Picker panel not always updated when adding a clip
+Picker panel selection leaves out last item in list
+Love Philter: freeze previewing patterns in picker panel
+Crash rearranging patterns in the picker panel
+No undo when dropping a pattern from the picker panel on the playlist
+Scroll in picker panel is too fast while previewing items
+Sort by name on pattern picker panel results in strangely named patterns in the browser
+Control Surface: checkbox and panel controls
+Automation clips in picker panel don't update automatically when the user makes changes
+Coloring and renaming pattern clips doesn't updated unselected clips in picker panel
+Erratic behaviour moving selected audio clips in picker panel
+Error when right-clicking a picker panel item while the channel rack was detached and hidden
+Exception when moving multiple audio clips in the picker panel
+Items in picker panel can't be previewed by holding shift and moving the mouse over them one by one
+Mouse wheel doesn't always work on picker panel when that is under the mouse cursor
+Picker panel items are kept in view when moving them
+Scaling and other graphical issues in picker panel
+Various sorting issues in picker panel
+Access violation using shift + mouse wheel on patterns in picker panel
+Broken settings panel on touch keyboard if they're opened while the keyboard is still scrolling
+Can't select icon when renaming an audio clip from the picker panel
+Dragging pattern and clip up or down the picker panel doesn't scroll when necessary
+Pattern title changes color when zooming in picker panel
+Picker panel doesn't update after changing channel or pattern color
+Picker panel becomes wider after changing width and scrolling
+Potential color conflicts in picker panel
+Rearranging patterns in picker panel does not always show the drop position
+Scrolling issues in picker panel
+Selecting a group in the channel rack doesn't select it on the audio / auto clip tabs of the picker panel
+Zoom of picker panel is not remembered betweem instances
+New: clip "picker panel" in playlist
+Slicex, Sytrus: discrepancies showing and hiding the piano keyboard
+	 Transistor Bass: pan control is inverted
+	 Panomatic: dB hint inaccuracy
+	 Removed "while you're rendering" panel from render window
+	 Panomatic: dB hint inaccurate
+	 Right-click on bottom panel of piano roll doesn't work
+	 Sytrus: wrong labels on chorus panel
+	 Sytrus: resize moves text field over other panels
+	 Black outline on pan wheel after loading NewStuff
+	 Wrapper: settings panel not shown correctly after captionizing plugin
+	 Replaced "Jap" in score preset names with "Japanese"
+	 Format panel in render window is open by default
+	 Touch: double-tap titlebars to maximize, double-pan titlebars to move or resize.
+	 Updated triangle panning law not to sound louder (uncompatible).
+	 change to sysex for Panorama device
+	 Support for Panorama P4 & QuNeo controllers
+	 Soundfont Player: fixed loading of soundfonts (some problems with EnsurePAnsiChar)
+	 Env editor: panning (middle button) also displays envelope without points (freeze).
+	 No more problem locating project files over networks.FPC: fixed pause point for layer pan and tune knobsWrapper: update interfaceless parameters in the GUI thread instead of the mixer threadWrapper: dropping fxb and fxp files on the title bar of the plugin window and on the step sequencer button now works
+	 Added multithreaded mixer tracks processing, and moved CPU settings to the audio panel.
+	 Enlarged playlist & piano roll time bar, playlist panels are not swappable anymore.
+	 Middle click now works as panning & works vertically as well in piano roll / playlist, and made it work in event editor as well. Shift+middle click or shift+right click works as old (inverted) bidirectional scrolling.
+	 Can now middle-click working area to "pan" plugin windows (ONLY plugins, as it's designed for oversized VST's). (thrown, too many annoyances)
+	 Playlist: clip source selection now in titlebar, and clips panel now on top by default.
+	 New spectral view in monitor panel.
+	 Mapped incoming "all notes off" MIDI message to panic.
+	 invalidate synthpanel on resize, to avoid graphical glitch when resizing the editor with "Show window contents while dragging" off in Windows
+	 pan envelope is now bipolar
+	 fixed behaviour of browser expansion with multiple instances
+	 Right-shift in piano roll & playlist to pan the editor (same as in Edison).Support for 16bit integer/32bit float/mono/stereo samples inside FL, Fruity Granulizer & Fruity Slicer.
+	 Sytrus: unison panning, volume and pitch now update running voices when automated. 
+	 FPC: the pan envelope can't cut a voice anymore
+	 Added auto-map all ASIO inputs (just like outputs), to monitor all inputs. New Fruity Squeeze sound degradation plugin.FPC: volume and pan envelopes per pad.FPC: pad presets and note layouts.New Wasp XT synth plugin.Wrappers now automatically save plugin specific settings (optional).Video player now has an option to disable rendering audio.New GM preset for DrumSynth Live.
+	 New plugins: 3x Osc, BeepMap (image synth), Fruity PanOMatic, Fruity NoteBook, MIDI out, etc.
+2.5.0 (13/04/00)	 Full envelopes & LFO (pan, vol, filter & pitch)!
+	 Old crap trashed out: mix feature (graph edit) & vol/pan/pitch/mix wheels.
+	 Added support for pyramid panning shape (circular is good but can generate clipping).
+	 Added pan wheels to the main window.
+	Main, channel & delay line pan/volume tweakings interpolated to avoid pops.
+	 Removed the channel settings unuseful pan & vol menus.
+	 Edit mode buttons added (Pan/vol & Keyboard modes).
+	 Dot pan, dot note, mix effect & random now work with MIDI too.
+	 Panning for each dot.
+	 New way of setting dot pan & vol (SHIFT).
+	 Humanize pan too.
+	 Samples now support panning.

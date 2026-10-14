@@ -1,0 +1,108 @@
+%.0f%% (pan)  ==>  %.0f%% (声像)
+&Dock control panel  ==>  停靠控制面板(&D)
+&Expand all  ==>  全部展开(&E)
+&Panning  ==>  声像(&P)
+&Picker panel  ==>  选择器面板(&P)
+-Panel  ==>  -面板
+-Panic  ==>  -Panic
+A panel  ==>  面板
+Another panel  ==>  另一面板
+Band panning  ==>  频段声像
+BandVisualPanel  ==>  频段可视面板
+Channel panning  ==>  通道声像
+Clear panel  ==>  清除面板
+Click to expand layer  ==>  点击以展开层
+ControlsPanel  ==>  控制面板
+Edit panning envelope  ==>  编辑声像包络
+Expand all layers  ==>  展开所有层
+Get channel pan  ==>  获取通道声像
+Get track pan  ==>  获取音轨声像
+Il faisait effroyablement froid; il neigeait depuis le matin; il faisait déjà sombre; le soir approchait, le soir du dernier jour de l'année. Au milieu des rafales, par ce froid glacial, une pauvre petite fille marchait dans la rue: elle n'avait rien sur la tête, elle était pieds nus. Lorsqu'elle était sortie de chez elle le matin, elle avait eu de vieilles pantoufles beaucoup trop grandes pour elle. Aussi les perdit-elle lorsqu'elle eut à se sauver devant une file de voitures; les voitures passées, elle chercha après ses chaussures; un méchant gamin s'enfuyait emportant en riant l'une des pantoufles; l'autre avait été entièrement écrasée.Voilà la malheureuse enfant n'ayant plus rien pour abriter ses pauvres petits petons. Dans son vieux tablier, elle portait des allumettes: elle en tenait à la main un paquet. Mais, ce jour, la veille du nouvel an, tout le monde était affairé; par cet affreux temps, personne ne s'arrêtait pour considérer l'air suppliant de la petite qui faisait pitié. La journée finissait, et elle n'avait pas encore vendu un seul paquet d'allumettes. Tremblante de froid et de faim, elle se traînait de rue en rue.Des flocons de neige couvraient sa longue chevelure blonde. De toutes les fenêtres brillaient des lumières: de presque toutes les maisons sortait une délicieuse odeur, celle de l'oie, qu'on rôtissait pour le festin du soir: c'était la Saint-Sylvestre. Cela, oui, cela lui faisait arrêter ses pas errants.Enfin, après avoir une dernière fois offert en vain son paquet d'allumettes, l'enfant aperçoit une encoignure entre deux maisons, dont l'une dépassait un peu l'autre. Harassée, elle s'y assied et s'y blottit, tirant à elle ses petits pieds: mais elle grelotte et frissonne encore plus qu'avant et cependant elle n'ose rentrer chez elle. Elle n'y rapporterait pas la plus petite monnaie, et son père la battrait.L'enfant avait ses petites menottes toutes transies. «Si je prenais une allumette, se dit-elle, une seule pour réchauffer mes doigts? » C'est ce qu'elle fit. Quelle flamme merveilleuse c'était! Il sembla tout à coup à la petite fille qu'elle se trouvait devant un grand poêle en fonte, décoré d'ornements en cuivre. La petite allait étendre ses pieds pour les réchauffer, lorsque la petite flamme s'éteignit brusquement: le poêle disparut, et l'enfant restait là, tenant en main un petit morceau de bois à moitié brûlé.Elle frotta une seconde allumette: la lueur se projetait sur la muraille qui devint transparente. Derrière, la table était mise: elle était couverte d'une belle nappe blanche, sur laquelle brillait une superbe vaisselle de porcelaine. Au milieu, s'étalait une magnifique oie rôtie, entourée de compote de pommes: et voilà que la bête se met en mouvement et, avec un couteau et une fourchette fixés dans sa poitrine, vient se présenter devant la pauvre petite. Et puis plus rien: la flamme s'éteint.L'enfant prend une troisième allumette, et elle se voit transportée près d'un arbre de Noël, splendide. Sur ses branches vertes, brillaient mille bougies de couleurs: de tous côtés, pendait une foule de merveilles. La petite étendit la main pour saisir la moins belle: l'allumette s'éteint. L'arbre semble monter vers le ciel et ses bougies deviennent des étoiles: il y en a une qui se détache et qui redescend vers la terre, laissant une traînée de feu.«Voilà quelqu'un qui va mourir » se dit la petite. Sa vieille grand-mère, le seul être qui l'avait aimée et chérie, et qui était morte il n'y avait pas longtemps, lui avait dit que lorsqu'on voit une étoile qui file, d'un autre côté une âme monte vers le paradis. Elle frotta encore une allumette: une grande clarté se répandit et, devant l'enfant, se tenait la vieille grand-mère.- Grand-mère, s'écria la petite, grand-mère, emmène-moi. Oh! tu vas me quitter quand l'allumette sera éteinte: tu t'évanouiras comme le poêle si chaud, le superbe rôti d'oie, le splendide arbre de Noël. Reste, je te prie, ou emporte-moi.Et l'enfant alluma une nouvelle allumette, et puis une autre, et enfin tout le paquet, pour voir la bonne grand-mère le plus longtemps possible. La grand-mère prit la petite dans ses bras et elle la porta bien haut, en un lieu où il n'y avait plus ni de froid, ni de faim, ni de chagrin: c'était devant le trône de Dieu.Le lendemain matin, cependant, les passants trouvèrent dans l'encoignure le corps de la petite ; ses joues étaient rouges, elle semblait sourire ; elle était morte de froid, pendant la nuit qui avait apporté à tant d'autres des joies et des plaisirs. Elle tenait dans sa petite main, toute raidie, les restes brûlés d'un paquet d'allumettes.- Quelle sottise ! dit un sans-cœur. Comment a-t-elle pu croire que cela la réchaufferait ? D'autres versèrent des larmes sur l'enfant; c'est qu'ils ne savaient pas toutes les belles choses qu'elle avait vues pendant la nuit du nouvel an, c'est qu'ils ignoraient que, si elle avait bien souffert, elle goûtait maintenant dans les bras de sa grand-mère la plus douce félicité.  ==>  Il faisait effroyablement froid; il neigeait depuis le matin; il faisait déjà sombre; le soir approchait, le soir du dernier jour de l'année. Au milieu des rafales, par ce froid glacial, une pauvre petite fille marchait dans la rue: elle n'avait rien sur la tête, elle était pieds nus. Lorsqu'elle était sortie de chez elle le matin, elle avait eu de vieilles pantoufles beaucoup trop grandes pour elle. Aussi les perdit-elle lorsqu'elle eut à se sauver devant une file de voitures; les voitures passées, elle chercha après ses chaussures; un méchant gamin s'enfuyait emportant en riant l'une des pantoufles; l'autre avait été entièrement écrasée.Voilà la malheureuse enfant n'ayant plus rien pour abriter ses pauvres petits petons. Dans son vieux tablier, elle portait des allumettes: elle en tenait à la main un paquet. Mais, ce jour, la veille du nouvel an, tout le monde était affairé; par cet affreux temps, personne ne s'arrêtait pour considérer l'air suppliant de la petite qui faisait pitié. La journée finissait, et elle n'avait pas encore vendu un seul paquet d'allumettes. Tremblante de froid et de faim, elle se traînait de rue en rue.Des flocons de neige couvraient sa longue chevelure blonde. De toutes les fenêtres brillaient des lumières: de presque toutes les maisons sortait une délicieuse odeur, celle de l'oie, qu'on rôtissait pour le festin du soir: c'était la Saint-Sylvestre. Cela, oui, cela lui faisait arrêter ses pas errants.Enfin, après avoir une dernière fois offert en vain son paquet d'allumettes, l'enfant aperçoit une encoignure entre deux maisons, dont l'une dépassait un peu l'autre. Harassée, elle s'y assied et s'y blottit, tirant à elle ses petits pieds: mais elle grelotte et frissonne encore plus qu'avant et cependant elle n'ose rentrer chez elle. Elle n'y rapporterait pas la plus petite monnaie, et son père la battrait.L'enfant avait ses petites menottes toutes transies. «Si je prenais une allumette, se dit-elle, une seule pour réchauffer mes doigts? » C'est ce qu'elle fit. Quelle flamme merveilleuse c'était! Il sembla tout à coup à la petite fille qu'elle se trouvait devant un grand poêle en fonte, décoré d'ornements en cuivre. La petite allait étendre ses pieds pour les réchauffer, lorsque la petite flamme s'éteignit brusquement: le poêle disparut, et l'enfant restait là, tenant en main un petit morceau de bois à moitié brûlé.Elle frotta une seconde allumette: la lueur se projetait sur la muraille qui devint transparente. Derrière, la table était mise: elle était couverte d'une belle nappe blanche, sur laquelle brillait une superbe vaisselle de porcelaine. Au milieu, s'étalait une magnifique oie rôtie, entourée de compote de pommes: et voilà que la bête se met en mouvement et, avec un couteau et une fourchette fixés dans sa poitrine, vient se présenter devant la pauvre petite. Et puis plus rien: la flamme s'éteint.L'enfant prend une troisième allumette, et elle se voit transportée près d'un arbre de Noël, splendide. Sur ses branches vertes, brillaient mille bougies de couleurs: de tous côtés, pendait une foule de merveilles. La petite étendit la main pour saisir la moins belle: l'allumette s'éteint. L'arbre semble monter vers le ciel et ses bougies deviennent des étoiles: il y en a une qui se détache et qui redescend vers la terre, laissant une traînée de feu.«Voilà quelqu'un qui va mourir » se dit la petite. Sa vieille grand-mère, le seul être qui l'avait aimée et chérie, et qui était morte il n'y avait pas longtemps, lui avait dit que lorsqu'on voit une étoile qui file, d'un autre côté une âme monte vers le paradis. Elle frotta encore une allumette: une grande clarté se répandit et, devant l'enfant, se tenait la vieille grand-mère.- Grand-mère, s'écria la petite, grand-mère, emmène-moi. Oh! tu vas me quitter quand l'allumette sera éteinte: tu t'évanouiras comme le poêle si chaud, le superbe rôti d'oie, le splendide arbre de Noël. Reste, je te prie, ou emporte-moi.Et l'enfant alluma une nouvelle allumette, et puis une autre, et enfin tout le paquet, pour voir la bonne grand-mère le plus longtemps possible. La grand-mère prit la petite dans ses bras et elle la porta bien haut, en un lieu où il n'y avait plus ni de froid, ni de faim, ni de chagrin: c'était devant le trône de Dieu.Le lendemain matin, cependant, les passants trouvèrent dans l'encoignure le corps de la petite ; ses joues étaient rouges, elle semblait sourire ; elle était morte de froid, pendant la nuit qui avait apporté à tant d'autres des joies et des plaisirs. Elle tenait dans sa petite main, toute raidie, les restes brûlés d'un paquet d'allumettes.- Quelle sottise ! dit un sans-cœur. Comment a-t-elle pu croire que cela la réchaufferait ? D'autres versèrent des larmes sur l'enfant; c'est qu'ils ne savaient pas toutes les belles choses qu'elle avait vues pendant la nuit du nouvel an, c'est qu'ils ignoraient que, si elle avait bien souffert, elle goûtait maintenant dans les bras de sa grand-mère la plus douce félicité.
+Information|This preset is free for owners of FL Studio. Unlock FL Studio from the about panel if you can't download it.  ==>  信息|此预置对拥有 FL Studio 的用户免费。如果无法下载，请在“关于”面板中将 FL Studio 解锁。
+Layer pan  ==>  层声像
+MIDIKbPanel  ==>  MIDIKbPanel
+Note|%s needs to be unlocked. Please re-enter your account login details on the |Help > About panel|.  ==>  注意|%s 需要解锁。请在|帮助 >“关于”面板|上重新输入您的帐户登录详细信息。
+Only expand one layer at a time  ==>  一次只能展开一层
+Open about panel  ==>  打开“关于”面板
+PAN  ==>  声像
+PAN + PAN ENV  ==>  声像 + 声像包络
+Pad %d pan  ==>  打击垫 %d 声像
+Pad %d pan attack  ==>  打击垫 %d 声像起始
+Pad %d pan decay  ==>  打击垫 %d 声像衰减
+Pad %d pan release  ==>  打击垫 %d 声像释放
+Pad %d pan sustain  ==>  打击垫 %d 声像持续
+Pan  ==>  声像
+Pan envelope  ==>  声像包络
+Pan fading  ==>  声像淡入淡出
+Pan flute  ==>  排箫
+PanOMatic  ==>  PanOMatic
+Panel  ==>  面板
+Panels  ==>  面板
+Panning  ==>  声像
+Panning law  ==>  声像法则
+PluginButtonPanel  ==>  PluginButtonPanel
+Send pan  ==>  发送声像
+Send pan, volume and pitch  ==>  发送声像、音量和音高
+Set channel pan  ==>  设置通道声像
+Set track pan  ==>  设置轨声像
+Show ASIO panel  ==>  显示 ASIO 面板
+Show VSTi panel  ==>  显示 VSTi 面板
+Show panel  ==>  显示面板
+Show panel locks  ==>  显示面板锁
+Swap &panels  ==>  交换面板(&P)
+Testing panels  ==>  测试面板
+Toggle browser and options panel  ==>  切换浏览器和选项面板
+Toggle browser panel  ==>  切换浏览器面板
+Toggle controls panel  ==>  切换控制面板
+VectorPanel1  ==>  矢量面板 1
+VectorPanel3  ==>  VectorPanel3
+VisualControlsPanel  ==>  可视控件面板
+VisualMenuPanel  ==>  可视菜单面板
+Voice Pan  ==>  语音声像
+^b^aPad pan  ==>  ^b^a打击垫声像
+^dCollapse / expand grouped tracks  ==>  ^d折叠/展开分组轨
+^dEdit panning envelope  ==>  ^d编辑声像包络
+pan  ==>  声像
+panning  ==>  声像
+|CPU panel  ==>  |CPU 面板
+|Hint panel  ==>  |提示面板
+|Menu panel  ==>  |菜单面板
+|Note panning  ==>  |音符声像
+|Note panning strength  ==>  |音符声像强度
+|Online panel  ==>  |在线面板
+|Output monitor panel  ==>  |输出监视器面板
+|Panning  ==>  |声像
+|Panning law  ==>  |声像法则
+|Panning will bounce  ==>  |声像会反弹
+|Pattern panel  ==>  |样式面板
+|Pitch panel  ==>  |音高面板
+|Position panel  ==>  |走带面板
+|Send MIDI panning / volume / pitch CC's  ==>  |发送 MIDI 声像/音量/音高 CC
+|Show / hide left controls panel  ==>  |显示/隐藏左侧控制面板
+|Show ASIO driver's settings panel  ==>  |显示 ASIO 驱动程序的设置面板
+|Show or hide the FX panel  ==>  |显示或隐藏 FX 面板
+|Snap panel  ==>  |对齐面板
+|Time panel  ==>  |时间面板
+|Transport panel  ==>  |传输面板
+|Volume panel  ==>  |音量面板
+|^^Shift+Enter^Hide panel / meters - controls aspect  ==>  |^^Shift+回车键^隐藏面板/仪表 - 控件外观
+|^bPanning / volume  ==>  |^b声像/音量
+|^b^aChannel panning  ==>  |^b^a通道声像
+|^b^aDelay input panning  ==>  |^b^a延迟输入声像
+|^b^aDelay panning  ==>  |^b^a延迟声像
+|^b^aFeedback panning  ==>  |^b^a反馈声像
+|^b^aInput panning  ==>  |^b^a输入声像
+|^b^aModulator unison panning  ==>  |^b^a调制器齐奏声像
+|^b^aOsc 1 panning  ==>  |^b^a振荡器 1 声像
+|^b^aOsc 2 panning  ==>  |^b^a振荡器 2 声像
+|^b^aOsc 3 panning  ==>  |^b^a振荡器 3 声像
+|^b^aOutput panning  ==>  |^b^a输出声像
+|^b^aPan  ==>  |^b^a声像
+|^b^aPan/Tremolo  ==>  |^b^a声像/颤音
+|^b^aPanning  ==>  |^b^a声像
+|^b^aPanning offset  ==>  |^b^a声像偏移
+|^b^aPatch Pan  ==>  |^b^a音色声像
+|^b^aSend panning  ==>  |^b^a发送声像
+|^b^aTo panning  ==>  |^b^a至声像
+|^b^aUnison panning  ==>  |^b^a齐奏声像
+|^b^aZone pan  ==>  |^b^a区域声像

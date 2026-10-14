@@ -1,0 +1,56 @@
+!^dEdit stereo separation envelope
+%.0f%% (pan)
+^dEdit panning envelope
+^dEdit stereo separation envelope
+|^b^aChannel panning
+|^b^aDelay input panning
+|^b^aDelay panning
+|^b^aFeedback panning
+|^b^aFeedback stereo separation
+|^b^aInput panning
+|^b^aInput stereo separation
+|^b^aModulator unison panning
+|^b^aOsc 1 panning
+|^b^aOsc 2 panning
+|^b^aOsc 3 panning
+|^b^aOutput panning
+|^b^aPad pan
+|^b^aPatch Pan
+|^b^aSend panning
+|^b^aStereo separation
+|^b^aTo panning
+|^b^aUnison panning
+|^b^aWet stereo separation
+|^b^aZone pan
+|Layer pan
+|Note panning
+|Note panning strength
+|Pan envelope
+|Panning law
+|Panning will bounce
+|Send MIDI panning / volume / pitch CC's
+|Stereo separation
+Band panning
+Center panned signal
+Channel panning
+Edit panning envelope
+Edit stereo separation envelope
+Get channel pan
+Get track pan
+Input stereo separation
+Output stereo separation
+Pad %d pan
+Pad %d pan attack
+Pad %d pan decay
+Pad %d pan release
+Pad %d pan sustain
+PAN + PAN ENV
+Pan fading
+Pan flute
+Panning law
+Send pan
+Send pan, volume and pitch
+Set channel pan
+Set track pan
+Stereo separation
+Voice Pan
