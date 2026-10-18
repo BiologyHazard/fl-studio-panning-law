@@ -6,7 +6,7 @@ import numpy as np
 
 plt.rcParams["font.family"] = "Source Han Sans SC"
 
-path = Path("Circular Panning Law.wav")
+path = Path("output-wav-files/Mixer Circular Panning.wav")
 
 # 读取音频
 with wave.open(path, "rb") as wav_file:

@@ -84,8 +84,9 @@ src/fl_studio_pan_rule/
     wav.py          零依赖 RIFF/WAVE 读取（按 float32 原样解码）
     cli.py          verify / table / eval
 references/         官方手册摘录、论坛帖、引擎 UI 字符串、中文语言包条目
-tools/
-    scan_engine_for_pan_law.py   在 FLEngine_x64.dll 里找 pan 代码（未成功，见文件头）
+scripts/
+    main.py                      实测曲线与理论曲线的误差对比
+    make_left_channel_dc.py      重新生成 input-wav-file/Left Channel DC.wav
 2023-06-21测试/      早期素材与渲染（含 16-bit 版本、正弦与 DC 素材、FLP）
 2024-09-19测试/      2024 年的素材、渲染、FLP，以及当年的拟合尝试 拟合.py
 ```
@@ -102,12 +103,8 @@ tools/
   代码按 ID 取值，不引用地址；`1/√2` 在整个 52 MB 镜像里精确出现 0 次，也没有预计算增益表）。
   这是唯一的缺口。
 
-要补上源代码这一层，需要装 Ghidra + JDK 21（或 IDA / radare2）：
-
-```bash
-uv sync --extra reverse-engineering
-uv run python tools/scan_engine_for_pan_law.py --dll "C:\Program Files\Image-Line\FL Studio 20\FLEngine_x64.dll"
-```
+要补上源代码这一层，需要装 Ghidra + JDK 21（或 IDA / radare2），直接反编译
+`FLEngine_x64.dll` 自行定位 pan 代码。
 
 ## 数据说明
 
@@ -118,3 +115,7 @@ uv run python tools/scan_engine_for_pan_law.py --dll "C:\Program Files\Image-Lin
 - `test_dc.wav` —— 另一条 pan 法则的渲染，充当负对照
 - `output.txt` / `P.txt` —— 2024 年拟合尝试的原始输出（约 14 MB 各一份），
   `拟合.py` 依赖它们，故保留
+
+`input-wav-file/Left Channel DC.wav` 是本次实测的输入素材（8 s、48 kHz、float32 立体声，
+左声道恒为 1.0，右声道恒为 0），可用 `uv run python scripts/make_left_channel_dc.py`
+重新生成。
