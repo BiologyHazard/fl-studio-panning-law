@@ -12,7 +12,7 @@
 | `fl-studio-projects/`                          | FL Studio 实验工程                     |
 | `input-wav-file/`                              | 左声道单位直流输入 WAV                 |
 | `output-wav-files/`                            | 4 种条件的原始输出 WAV                 |
-| `images/*.png`                                 | 软件截图                               |
+| `images/screenshots/`                          | 软件截图                               |
 | `images/figures/`                              | 程序生成的分析图表                     |
 | `results/statistics.json`                      | 全精度残差、输出极值、原始文件 SHA-256 |
 | `scripts/`                                     | 数据分析、单图绘制及生成输入文件的代码 |

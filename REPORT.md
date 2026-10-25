@@ -103,7 +103,7 @@ FL Studio 官方手册在 *Project General Settings* 的 “Panning law” 条�
 
 实验使用 FL Studio 20.8.3.2304，研究两个问题：两类声像控制如何变换左右输入，以及 Circular / Triangular 设置如何改变该变换。
 
-![FL Studio 项目声像法则设置](<images/FL Studio Panning Law Settings.png>)
+![FL Studio 项目声像法则设置](<images/screenshots/FL Studio Panning Law Settings.png>)
 
 **图 1. 项目声像法则设置。** “Panning law” 下拉菜单提供 Circular 和 Triangular 两个选项，构成本实验的一个控制因素。
 
@@ -207,17 +207,17 @@ $$
 
 输入为双声道直流信号：左声道在全部帧上等于 $1$，右声道在全部帧上等于 $0$。图 2 展示该信号在音频编辑器中的波形。
 
-![左声道单位直流输入](<images/Left Channel DC.png>)
+![左声道单位直流输入](<images/screenshots/Left Channel DC.png>)
 
 **图 2. 输入测试信号。** 上方左声道保持单位正幅度，下方右声道保持零。右侧刻度为 dB 显示，红色水平线为零幅度参考。
 
 Mixer 条件对 Master 轨道的 Panning 控件施加自动化，图 3 的自动化片段标为 “Master - Panning”。Audio Clip 条件对音频片段通道的声像控件施加自动化，图 4 中标为 “Left Channel DC - Channel panning”。
 
-![Mixer 声像自动化设置](<images/FL Studio Mixer Panning.png>)
+![Mixer 声像自动化设置](<images/screenshots/FL Studio Mixer Panning.png>)
 
 **图 3. Mixer 控制位置。** 自动化目标为 Mixer Master 的声像旋钮，播放列表中的直线覆盖测试音频的时间范围。
 
-![Audio Clip 声像自动化设置](<images/FL Studio Audio Clip Panning.png>)
+![Audio Clip 声像自动化设置](<images/screenshots/FL Studio Audio Clip Panning.png>)
 
 **图 4. Audio Clip 控制位置。** 自动化目标为音频片段通道设置中的 PAN 旋钮。实验中关闭 “Remove DC offset” 和 “Normalize”，保留输入直流及其幅度基准。
 
@@ -237,7 +237,7 @@ Mixer 条件对 Master 轨道的 Panning 控件施加自动化，图 3 的自动
 
 导出时采用图 5 所示设置。选择 WAV、32Bit float 和 Stereo，以保存双声道浮点幅度；选择 Full song 并将 Tail 设为 Cut remainder，使输出长度与 8 s 扫描区间一致。
 
-![FL Studio 音频导出设置](<images/FL Studio Rendering Settings.png>)
+![FL Studio 音频导出设置](<images/screenshots/FL Studio Rendering Settings.png>)
 
 **图 5. 音频导出设置。** 图示以 Audio Clip Circular 为例。导出范围为 4 小节、8 s，输出为双声道 32 位浮点 WAV。
 
@@ -331,7 +331,7 @@ $$
 
 左输出括号内的两项权重之和为 $1$：居中时 $v_{\text{Circ}}=1$，权重为 $(1,0)$；极左时 $v_{\text{Circ}}=0$，权重为 $(1/2,1/2)$。与此同时，外部增益 $u_{\text{Circ}}$ 从 $1$ 增至 $\sqrt2$。因此，偏转过程同时改变左右输入的混合比例及混合后的增益。对于本实验的单侧输入，这两种变化共同产生左偏区间的内部幅度峰值，其位置与幅度在第 6.3 节求得。
 
-![Mixer Circular 原始输出](<images/Mixer Circular Panning.png>)
+![Mixer Circular 原始输出](<images/screenshots/Mixer Circular Panning.png>)
 
 **图 6. Mixer Circular 的输出波形。** 左输出先升后降，在居中之前略高于单位幅度；右输出从扫描中点之后增加，接近极右时约为 $-3\,\text{dB}$。
 
@@ -394,7 +394,7 @@ $$
 
 所有系数均为分段线性函数。左偏时，左输入的同侧系数从极左的 $1/2$ 增至居中的 $1$；右偏时，该系数降至零，同时左输入到右输出的系数增至 $1/2$。
 
-![Mixer Triangular 原始输出](<images/Mixer Triangular Panning.png>)
+![Mixer Triangular 原始输出](<images/screenshots/Mixer Triangular Panning.png>)
 
 **图 7. Mixer Triangular 的输出波形。** 左输出从约 $-6\,\text{dB}$ 增至居中的 $0\,\text{dB}$，再下降；右输出在右半段增加，末端接近 $-6\,\text{dB}$。
 
@@ -435,7 +435,7 @@ $$
 
 左声道输入在极左处获得 $\sqrt2$ 倍增益，在居中处获得单位增益，在极右处降为零。与 Mixer Circular 相比，Audio Clip 的同侧增益直接采用 $u_{\text{Circ}},v_{\text{Circ}}$，矩阵的交叉项为零；因而本实验中的左输入始终只出现在左输出。
 
-![Audio Clip Circular 原始输出](<images/Audio Clip Circular Panning.png>)
+![Audio Clip Circular 原始输出](<images/screenshots/Audio Clip Circular Panning.png>)
 
 **图 8. Audio Clip Circular 的输出波形。** 左输出从约 $+3\,\text{dB}$ 逐渐下降，右输出保持为零。
 
@@ -468,7 +468,7 @@ $$
 
 具体而言，左偏时输出为 $y_{\text{L}}=x_{\text{L}}$、$y_{\text{R}}=(1+p)x_{\text{R}}$；右偏时输出为 $y_{\text{L}}=(1-p)x_{\text{L}}$、$y_{\text{R}}=x_{\text{R}}$。偏转侧保持单位增益，另一侧随声像位置线性衰减。它与 Audio Clip Circular 共享对角矩阵结构，采用的是分段线性增益函数。
 
-![Audio Clip Triangular 原始输出](<images/Audio Clip Triangular Panning.png>)
+![Audio Clip Triangular 原始输出](<images/screenshots/Audio Clip Triangular Panning.png>)
 
 **图 9. Audio Clip Triangular 的输出波形。** 左输出在前半段保持 $0\,\text{dB}$，后半段下降；右输出保持为零。
 
