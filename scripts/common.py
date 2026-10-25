@@ -78,7 +78,7 @@ def gains(pan: np.ndarray, law: str) -> tuple[np.ndarray, np.ndarray]:
 def matrix(pan: np.ndarray, case: Case) -> np.ndarray:
     p = np.asarray(pan, dtype=np.float64)
     u, v = gains(p, case.law)
-    a = np.zeros(p.shape + (2, 2))
+    a = np.zeros((*p.shape, 2, 2))
     if case.control == "Audio Clip":
         a[..., 0, 0], a[..., 1, 1] = u, v
     elif case.control == "Mixer":

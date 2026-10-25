@@ -9,7 +9,7 @@ def main():
     style()
     p = np.linspace(-1, 1, 4001)
     fig, axes = plt.subplots(1, 3, figsize=(13, 4))
-    for law, color in zip(("Circular", "Triangular"), COLORS):
+    for law, color in zip(("Circular", "Triangular"), COLORS, strict=True):
         u, v = gains(p, law)
         axes[0].plot(p, (u * u + v * v) / 2, color=color, label=law)
     axes[0].set(
@@ -20,7 +20,10 @@ def main():
     )
     axes[0].legend()
     for case, color, ls in zip(
-        CASES, (COLORS[0], COLORS[0], COLORS[1], COLORS[1]), ("-", "--", "-", "--")
+        CASES,
+        (COLORS[0], COLORS[0], COLORS[1], COLORS[1]),
+        ("-", "--", "-", "--"),
+        strict=True,
     ):
         a = matrix(p, case)
         axes[1].plot(

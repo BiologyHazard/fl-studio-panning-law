@@ -9,7 +9,7 @@ def main():
     style()
     p = np.linspace(-1, 1, 2001)
     fig, axes = plt.subplots(2, 2, figsize=(11, 7), sharex=True, sharey=True)
-    for ax, case, letter in zip(axes.flat, CASES, "abcd"):
+    for ax, case, letter in zip(axes.flat, CASES, "abcd", strict=True):
         a = matrix(p, case)
         for row, col, color, ls in [
             (0, 0, COLORS[0], "-"),
