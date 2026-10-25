@@ -60,9 +60,9 @@ def read_wav(path: Path) -> tuple[int, np.ndarray]:
     return rate, data
 
 
-def nominal_pan(count: int, *, endpoint: bool = False) -> np.ndarray:
-    """t=n/fs, T=N/fs: nominal p=-1+2t/T. Endpoint=True is a sensitivity check."""
-    return -1 + 2 * np.arange(count, dtype=np.float64) / (count - int(endpoint))
+def nominal_pan(count: int) -> np.ndarray:
+    """Sample-time pan p=-1+2n/N; the last sample precedes the right endpoint."""
+    return -1 + 2 * np.arange(count, dtype=np.float64) / count
 
 
 def gains(pan: np.ndarray, law: str) -> tuple[np.ndarray, np.ndarray]:

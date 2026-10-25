@@ -4,7 +4,7 @@ import hashlib
 import json
 
 import numpy as np
-from common import CASES, RESULTS, ROOT, errors, matrix, measured, nominal_pan, read_wav
+from common import CASES, RESULTS, ROOT, errors, matrix, measured, read_wav
 
 
 def identity_residual(case):
@@ -40,9 +40,6 @@ def compute():
             raise ValueError(f"Incompatible recording: {case.name}")
         p, _ = measured(case)
         residual = data - matrix(p, case)[..., :, 0]
-        endpoint_residual = (
-            data - matrix(nominal_pan(len(data), endpoint=True), case)[..., :, 0]
-        )
         entry = {
             "rate": fs,
             "frames": len(data),
@@ -53,9 +50,6 @@ def compute():
             "max": data.max(axis=0).tolist(),
             "right_nonzero_samples": int(np.count_nonzero(data[:, 1])),
             "residual": [errors(residual[:, c]) for c in range(2)],
-            "endpoint_convention_residual": [
-                errors(endpoint_residual[:, c]) for c in range(2)
-            ],
         }
         if case.control == "Mixer":
             _, r = identity_residual(case)

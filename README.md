@@ -16,7 +16,7 @@
 | `output-wav-files/`                            | 四种条件的原始输出 WAV                                         |
 | `images/*.png`                                 | 八张原始实验截图，均已嵌入报告                                 |
 | `images/figures/`                              | 五张程序生成的分析图，每图包含 PNG 与 SVG                      |
-| `results/statistics.json`                      | 全精度残差、输出极值、端点约定比较及原始文件 SHA-256           |
+| `results/statistics.json`                      | 全精度残差、输出极值、原始文件 SHA-256           |
 | `scripts/`                                     | 数据分析、单图绘制及输入生成代码                               |
 | `pyproject.toml`、`uv.lock`、`.python-version` | Python 环境与锁定依赖                                          |
 
@@ -54,7 +54,7 @@ uv run python scripts/analyze.py
 uv run python scripts/fig_response.py
 ```
 
-图中的显示抽样只影响绘图，所有统计和残差包络均使用完整数据。`statistics.json` 中 `residual` 采用 `p[n] = -1 + 2n/N`，`endpoint_convention_residual` 采用 `p[n] = -1 + 2n/(N-1)`；两者的最大绝对残差和 RMS 均分别按左右声道保存。
+图中的显示抽样只影响绘图，所有统计和残差包络均使用完整数据。声像位置按采样时刻计算为 `p[n] = -1 + 2n/N`，末帧位于全右端点之前。`statistics.json` 中 `residual` 保存左右声道各自的最大绝对残差与 RMS。残差图的局部窗口为末尾 100 ms（7.9–8.0 s，右端点不包含在采样中）。
 
 ## 重新生成输入
 

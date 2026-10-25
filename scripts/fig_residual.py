@@ -24,19 +24,19 @@ def main():
             )
             count = round(0.1 * fs)
             axes[row, 1].plot(
-                np.arange(count) / fs * 1000,
-                e[:count, ch],
+                np.arange(len(data) - count, len(data)) / fs,
+                e[-count:, ch],
                 color=COLORS[ch],
                 lw=0.8,
                 label=label,
             )
         axes[row, 0].set_ylabel(f"{case.name}\nResidual ($10^{{-6}}$)")
         axes[row, 0].set_xlim(-1, 1)
-        axes[row, 1].set_xlim(0, 100)
+        axes[row, 1].set_xlim(len(data) / fs - 0.1, len(data) / fs)
     axes[0, 0].set_title("Full sweep: min/max envelopes in 800 bins")
-    axes[0, 1].set_title("First 100 ms: every sample")
+    axes[0, 1].set_title("Last 100 ms: every sample")
     axes[-1, 0].set_xlabel("Nominal pan $p$")
-    axes[-1, 1].set_xlabel("Time (ms)")
+    axes[-1, 1].set_xlabel("Time (s)")
     axes[0, 1].legend(ncols=2)
     save(fig, "03-residual")
 
