@@ -1,4 +1,4 @@
-"""Figure 4: cross-output tests that do not invert the nominal pan ramp."""
+"""Report Figure 8: cross-output tests independent of the nominal pan ramp."""
 import matplotlib.pyplot as plt
 import numpy as np
 from analyze import identity_residual

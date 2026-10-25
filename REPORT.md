@@ -1,219 +1,327 @@
-# FL Studio 双声道声像变换的实验辨识
+# FL Studio 双声道声像法则的实验辨识
 
 ## 摘要
 
-本研究以单位左声道直流信号为探测输入，比较 FL Studio 中 Mixer 与 Audio Clip 两类声像控制在 Circular 和 Triangular 两种项目声像法则下的输入—输出关系。研究以无记忆线性变换及左右交换对称性为前提：前者使输出可表示为声像位置相关的实数二阶矩阵，后者使一次覆盖全声像范围的左声道激励能够约束完整矩阵。对四份双声道、48 kHz、32 位浮点、8 s 渲染文件进行逐样本分析，得到一组统一的分段矩阵模型。模型表明，Audio Clip 的声像控制对应对角增益变换；Mixer 的声像控制则包含向声像偏转侧的交叉混合。采用按采样时间定义的线性名义声像轨迹时，四种条件下各输出的最大绝对残差不超过 $6.074\times10^{-5}$。进一步消去声像参数后，Mixer 的 Circular 和 Triangular 左右输出关系残差分别不超过 $8.411\times10^{-6}$ 和 $3.770\times10^{-6}$。这些结果支持所提出模型对现有数据的描述，但不构成对线性、无记忆性和左右对称性的独立验证。模型还给出了极端声像处的求和关系、等功率性质的适用条件，以及 Mixer Circular 在单侧输入下约 $+0.423\,\mathrm{dB}$ 的内部幅度极大值。
+本研究通过左声道单位直流激励，测量 FL Studio 中 Mixer 与 Audio Clip 两类声像控制在 Circular 和 Triangular 设置下的双声道变换。研究采用无记忆性、线性性和左右交换对称性三个假设，利用全范围声像扫描辨识变换矩阵。四份实验音频均为 48 kHz、32 位浮点、8 s 双声道文件。结果表明，Audio Clip 对左右声道分别施加增益；Mixer 则在增益调整的同时，将另一侧输入混入声像偏转侧。本文给出四种情形仅以归一化声像位置 $p$ 为参数的完整矩阵公式。按采样时间建立名义线性扫描轨迹后，各输出的最大绝对残差均低于 $6.1\times10^{-5}$；消去声像参数后的 Mixer 左右输出关系残差低于 $8.5\times10^{-6}$。由所获公式进一步得到极端声像处的求和关系、同相双声道输入的功率规律，以及 Mixer Circular 在单侧输入下约 $+0.423\,\mathrm{dB}$ 的内部幅度峰值。
 
-**关键词：** FL Studio；panning law；双声道；系统辨识；增益矩阵；直流探测
+**关键词：** FL Studio；panning law；声像法则；双声道变换；增益矩阵；直流测量
 
-## 1. 研究对象与辨识问题
+## 1. 官方说明与研究问题
 
-声像控制对双声道输入的作用不能仅由两条单声道增益曲线完整描述。除各输入声道的衰减或补偿外，还必须确定是否存在从左输入到右输出、或从右输入到左输出的交叉通路。本研究的目标是给出四种实验条件下的双声道变换矩阵，并检验其对现有渲染数据的解释能力。
+### 1.1 官方文档对声像法则的描述
 
-实验条件由控制位置与项目声像法则构成。本文用 **Mixer** 指所存工程中被自动化的 Mixer Master 声像控制，用 **Audio Clip** 指音频片段通道设置中的 Channel panning 控制；后者不泛指所有插件通道。Circular 和 Triangular 保留软件界面中的名称。四个工程文件均包含版本标识 `20.8.3.2304`；本文的结论限定于这批工程及其渲染结果，不据此断言其他版本、其他通道类型或所有 Mixer 路由均具有同一实现。
+FL Studio 官方手册在 *Project General Settings* 的 “Panning law” 条目中说明，声像法则用于补偿声音从中央移动到两侧时的表观音量变化。关于两种设置，手册给出了以下描述 [1]：
 
-本文区分三类陈述：**观测结果**直接来自 WAV 样本；**经验模型**是与这些样本比较的解析表达式；**条件性推论**由经验模型和建模假设推出。特别是，完整矩阵的第二列并非第二组独立激励的测量结果。
+> “Circular - Level compensation is applied when panning (orange). Level drops 3 dB at center pan.”
 
-## 2. 数学框架与可辨识性
+即 Circular 在声像变化时施加电平补偿，中心位置的电平比极端位置低约 3 dB。
 
-### 2.1 无记忆线性模型
+> “Triangular - No level compensation is used as a function of pan position (green).”
 
-令归一化声像参数为 $p\in[-1,1]$，其中 $-1$、$0$、$1$ 分别代表全左、居中、全右。对离散时刻 $n$，记
+即 Triangular 不随声像位置施加上述电平补偿。该条目还说明，其整体电平相对于 Circular 极端声像位置低约 3 dB。
+
+手册随后专门说明了 Audio Clip 的电平基准 [1]：
+
+> “in this case volume is being added at extremes instead of subtracted at the center position.”
+
+即在这里，补偿体现为提高两端的电平。结合该段上下文：在默认 Channel Sampler 设置下，Audio Clip 的电平读数与录制电平相同，使用 Circular 时最多可以增加约 3 dB。因此，中心与两端的相对差异，需要结合实际信号路径的电平基准理解。
+
+关于 Mixer 的声像控制，官方 *Mixer* 页面写道 [2]：
+
+> “The pan works by mixing one side of the stereo track into the other, so a 100% pan is the mono-sum of the Left and Right channels.”
+
+即 Mixer 通过将一侧立体声信号混入另一侧实现声像变化，全偏时得到左右声道的单声道求和。
+
+这些说明给出了声像控制的用途、补偿幅度及 Mixer 的混合行为，但**没有给出增益随声像位置变化的具体公式，也没有给出双声道交叉混合系数的完整表达式**。仅凭中心与端点的电平关系，仍有多种连续函数可以满足要求。因此，要确定任意声像位置下的输出，必须通过实测辨识其变换规律。
+
+### 1.2 研究范围
+
+本研究比较以下四种组合：
+
+| 控制位置 | Circular | Triangular |
+|---|---|---|
+| Mixer Master 的 Panning | Mixer Circular | Mixer Triangular |
+| Audio Clip 的 Channel panning | Audio Clip Circular | Audio Clip Triangular |
+
+四个实验工程包含版本标识 `20.8.3.2304`。本文以这些工程及其输出音频为研究材料，回答两个问题：两类声像控制如何变换左右输入，以及 Circular / Triangular 设置如何改变该变换。
+
+![FL Studio 项目声像法则设置](<images/FL Studio Panning Law Settings.png>)
+
+**图 1. 项目声像法则设置。** `Panning law` 下拉菜单提供 Circular 和 Triangular 两个选项，构成本实验的一个控制因素。
+
+## 2. 符号、假设与测量原理
+
+### 2.1 输入、输出与声像参数
+
+双声道音频由按时间排列的采样帧组成，每帧包含一个左声道样本和一个右声道样本。本文使用下列符号：
+
+| 符号 | 定义 |
+|---|---|
+| $n$ | 从 0 开始的采样帧序号，$n=0,\ldots,N-1$ |
+| $N$ | 音频的总帧数 |
+| $f_s$ | 采样率，单位 Hz |
+| $t_n=n/f_s$ | 第 $n$ 帧对应的时间，单位 s |
+| $x_L[n],x_R[n]$ | 第 $n$ 帧进入声像变换的左、右声道输入样本值 |
+| $y_L[n],y_R[n]$ | 第 $n$ 帧经过声像变换的左、右声道输出样本值 |
+| $\boldsymbol{x}[n],\boldsymbol{y}[n]$ | 将左右样本排列为列向量的输入、输出 |
+| $p$ | 归一化声像位置；$-1$ 为全左，$0$ 为居中，$1$ 为全右 |
+| $p[n]$ | 第 $n$ 帧采用的声像位置 |
+| $A(p)$ | 声像位置为 $p$ 时的 $2\times2$ 实数增益矩阵 |
+| $A_{ij}(p)$ | 从输入声道 $j$ 到输出声道 $i$ 的增益；1 表示左，2 表示右 |
+
+上述样本值是数字音频幅度，本文以数值 1 为幅度参考。上标 $\mathsf T$ 表示转置，例如 $(1,0)^{\mathsf T}$ 表示由 1 和 0 组成的列向量。输入和输出向量具体写为
 
 $$
-\boldsymbol{x}[n]=\begin{bmatrix}x_L[n]\\x_R[n]\end{bmatrix},\qquad
-\boldsymbol{y}[n]=\begin{bmatrix}y_L[n]\\y_R[n]\end{bmatrix}.
-$$
-
-假设音频输入在每个时刻经历如下变换：
-
-$$
-\boldsymbol{y}[n]=A(p[n])\boldsymbol{x}[n],\qquad
-A(p)=\begin{bmatrix}A_{11}(p)&A_{12}(p)\\A_{21}(p)&A_{22}(p)\end{bmatrix}.
+\boldsymbol{x}[n]=
+\begin{bmatrix}x_L[n]\\x_R[n]\end{bmatrix},
+\qquad
+\boldsymbol{y}[n]=
+\begin{bmatrix}y_L[n]\\y_R[n]\end{bmatrix}.
 \tag{1}
 $$
 
-行下标表示输出声道，列下标表示输入声道。式（1）对音频输入是线性的，但对控制参数 $p$ 不要求线性；随 $p[n]$ 变化的系统也不必时不变。无记忆性指当前音频输出不依赖过去的音频样本。控制参数本身是否经过平滑或插值，是另一个问题：实验设定的名义轨迹未必等于音频引擎逐样本采用的实际参数。
+### 2.2 三个建模假设
 
-式（1）排除了独立的加性偏置。单次固定幅度的直流输入不能独立检验这一点，也不能排除只在其他幅度或频率下显现的非线性、滤波或延迟。本文将其作为辨识前提，而非实验证明。
+本研究采用以下三个假设：
 
-### 2.2 左右交换对称性
+1. **无记忆性：** 在给定声像位置时，当前输出由当前帧的左右输入决定。
+2. **线性性：** 在给定声像位置时，输入的缩放和叠加对应于输出的相同缩放和叠加。
+3. **左右交换对称性：** 同时交换输入、输出声道并反转声像方向，变换规律保持一致。
 
-定义声道交换矩阵
-
-$$
-J=\begin{bmatrix}0&1\\1&0\end{bmatrix}.
-$$
-
-左右交换对称性写为
+前两个假设使声像变换可以写成
 
 $$
-A(-p)=J A(p)J.
+\boldsymbol{y}[n]=A(p[n])\boldsymbol{x}[n],
+\qquad
+A(p)=
+\begin{bmatrix}
+A_{11}(p)&A_{12}(p)\\
+A_{21}(p)&A_{22}(p)
+\end{bmatrix}.
 \tag{2}
 $$
 
-其含义是：交换输入、输出声道并反转声像方向后，变换规律保持一致。它**不等价于**在同一 $p$ 下要求 $A_{12}=A_{21}$，也不等价于矩阵 $A(p)$ 本身为对称矩阵。
-
-以左声道基向量为输入，
+展开式（2），有
 
 $$
-\boldsymbol{x}=\boldsymbol{e}_L=\begin{bmatrix}1\\0\end{bmatrix},\qquad
-A(p)\boldsymbol{e}_L=\begin{bmatrix}f(p)\\h(p)\end{bmatrix},
+\begin{aligned}
+y_L[n]&=A_{11}(p[n])x_L[n]+A_{12}(p[n])x_R[n],\\
+y_R[n]&=A_{21}(p[n])x_L[n]+A_{22}(p[n])x_R[n].
+\end{aligned}
 \tag{3}
 $$
 
-则实验直接约束 $f=A_{11}$ 和 $h=A_{21}$。结合式（2），完整矩阵为
+因此，对角元素描述同侧增益，非对角元素描述跨声道混合。线性性针对音频输入；矩阵系数随声像参数 $p$ 的变化可以是非线性的。
+
+令交换矩阵 $J$ 为
 
 $$
-\boxed{A(p)=\begin{bmatrix}f(p)&h(-p)\\h(p)&f(-p)\end{bmatrix}.}
+J=\begin{bmatrix}0&1\\1&0\end{bmatrix},
+$$
+
+则第三个假设表示为
+
+$$
+A(-p)=J A(p)J.
 \tag{4}
 $$
 
-因此，全范围左声道扫描在上述假设下足以重建四个矩阵元素。若不采用左右对称性假设，则第二列仍不可辨识，需要额外的右声道激励。有限采样与非零残差也意味着，连续解析函数并非由这批数据唯一决定；本文给出的是结构简洁且经过残差检验的候选模型。
+### 2.3 左声道直流激励与矩阵重建
 
-## 3. 实验材料与分析方法
-
-### 3.1 数据与控制条件
-
-输入文件逐样本满足 $x_L[n]=1$、$x_R[n]=0$，没有对输入作峰值归一化、去直流或幅度拟合。四份输出具有相同的采样率、帧数与数值编码。
-
-| 项目 | 数值或条件 |
-|---|---|
-| 输入 | `input-wav-file/Left Channel DC.wav`，双声道 $(1,0)^{\mathsf T}$ |
-| 采样率 $f_s$ | $48000\,\mathrm{Hz}$ |
-| 帧数 $N$ | $384000$；每帧含左右两个样本 |
-| 时长 $T=N/f_s$ | $8\,\mathrm{s}$ |
-| 输入与输出编码 | IEEE 754 float32，双声道 WAV |
-| 控制扫描 | 从全左到全右的名义线性自动化 |
-| 因素一 | Mixer Master / Audio Clip Channel panning |
-| 因素二 | Circular / Triangular |
-| 数据量 | 每种条件一份渲染，共四份；无独立重复渲染 |
-
-四份输出依次为 `Mixer Circular Panning.wav`、`Mixer Triangular Panning.wav`、`Audio Clip Circular Panning.wav` 和 `Audio Clip Triangular Panning.wav`，均位于 `output-wav-files/`；同名工程位于 `fl-studio-projects/`。
-
-现存设置截图显示，Mixer 条件的自动化目标为 `Master - Panning`，Audio Clip 条件的目标为 `Left Channel DC - Channel panning`；Audio Clip 截图中 `Remove DC offset` 与 `Normalize` 未启用。截图用于确认实验对象及可见设置，不能替代对全部工程状态和渲染选项的记录。本文没有重新运行 FL Studio 渲染；所有定量结果均从存档音频重新计算。
-
-### 3.2 声像坐标与端点约定
-
-按帧起始时刻 $t_n=n/f_s$ 定义名义声像位置：
+本实验使用恒定输入 $x_L[n]=1$、$x_R[n]=0$。在这一输入下，式（3）直接给出
 
 $$
-\bar p_n=-1+\frac{2t_n}{T}=-1+\frac{2n}{N},\qquad n=0,\ldots,N-1.
+y_L[n]=A_{11}(p[n]),\qquad y_R[n]=A_{21}(p[n]).
 \tag{5}
 $$
 
-此约定下，第 $192000$ 帧对应居中，最后一帧对应 $1-2/N\approx0.999994792$，不包含 $t=T$ 处的右端点。因而，文件最后一个样本不能直接作为 $p=1$ 的精确测量。后文给出的全右值是模型端点值，与末帧实测值分开列示。
-
-另一种常见约定是 $-1+2n/(N-1)$，即强制令首末帧覆盖两个端点。两种约定的最大差异为 $2/N\approx5.208\times10^{-6}$。分析程序同时保存两种约定的残差，正文统一采用式（5）。此选择依据采样时间定义，不是通过最小化残差获得；程序没有拟合额外时间偏移、声像缩放或增益修正。
-
-### 3.3 数值处理与检验指标
-
-读取原始 float32 样本后，在 float64 中计算模型预测与差值。对每个输出声道 $c\in\{L,R\}$，定义
-
-$$
-e_c[n]=y_c[n]-\widehat y_c(\bar p_n),\qquad
-E_{\infty,c}=\max_n|e_c[n]|,\qquad
-E_{\mathrm{RMS},c}=\sqrt{\frac1N\sum_{n=0}^{N-1}e_c[n]^2}.
-\tag{6}
-$$
-
-所有统计使用完整数据，不裁切首尾，不对输出平滑，不以反推声像位置后的同一输出残差作为拟合质量。幅度误差以输入单位幅度为参考；RMS 在此是残差的描述性统计量，不是重复测量的标准误。由于没有独立重复实验或独立验证集，本文不报告置信区间，也不将同一记录中的大量相关样本解释为独立试验。
-
-## 4. 经验变换模型
-
-### 4.1 两类基础增益函数
-
-为统一表达四种条件，定义一对基础增益 $u(p)$、$v(p)$，满足 $v(p)=u(-p)$。Circular 模型取
-
-$$
-\theta(p)=\frac{\pi}{4}(p+1),\qquad
-u(p)=\sqrt2\cos\theta(p),\qquad
-v(p)=\sqrt2\sin\theta(p).
-\tag{7}
-$$
-
-Triangular 模型取
-
-$$
-u(p)=1-\max(p,0),\qquad v(p)=1+\min(p,0).
-\tag{8}
-$$
-
-两种模型均在 $p=0$ 处满足 $u=v=1$。Circular 满足 $u^2+v^2=2$，而 Triangular 满足 $u^2+v^2=1+(1-|p|)^2$。这里的 $u,v$ 是表达矩阵的公共函数，不应在所有输入和控制条件下都被直接解释为实测输出幅度。
-
-### 4.2 Audio Clip：对角增益变换
-
-两份 Audio Clip 渲染的右输出在全部 $384000$ 帧上均严格为数值零。其左输出与相应的 $u(p)$ 一致到第 5 节所列残差量级。因此，第一列模型为 $f=u$、$h=0$；按左右交换对称性补全后，
-
-$$
-\boxed{A_{\mathrm{Clip}}(p)=\begin{bmatrix}u(p)&0\\0&v(p)\end{bmatrix}.}
-\tag{9}
-$$
-
-这一结构属于双声道平衡控制：各输入只作用于同侧输出。向右偏转一个仅含左声道的信号会使其衰减，而不会把它转移到右输出。对角结构中的 $A_{21}=0$ 是本次激励的直接观测，$A_{12}=0$ 则依赖对称性假设。
-
-### 4.3 Mixer：分段交叉混合
-
-Mixer 的左声道激励响应可用以下两条函数描述：
-
-$$
-f(p)=\begin{cases}
-u(p)[1+v(p)]/2,&-1\le p\le0,\\
-u(p),&0\le p\le1,
-\end{cases}\qquad
-h(p)=\begin{cases}
-0,&-1\le p\le0,\\
-v(p)[1-u(p)]/2,&0\le p\le1.
-\end{cases}
-\tag{10}
-$$
-
-两个分支在 $p=0$ 处一致。结合式（4），得到
+换言之，输出样本直接读出矩阵第一列的两个增益系数。为表述测量结果，定义 $f(p)=A_{11}(p)$、$h(p)=A_{21}(p)$，分别表示左输入到左输出、左输入到右输出的增益。由式（4），可重建
 
 $$
 \boxed{
-A_{\mathrm{Mixer}}(p)=
+A(p)=
+\begin{bmatrix}
+f(p)&h(-p)\\
+h(p)&f(-p)
+\end{bmatrix}.}
+\tag{6}
+$$
+
+因此，将同一左声道直流信号从全左扫描到全右，便可得到完整双声道变换所需的信息。
+
+## 3. 实验设计与数据处理
+
+### 3.1 输入材料与控制位置
+
+输入文件为 `input-wav-file/Left Channel DC.wav`。逐样本读取确认，其左声道在全部帧上等于 1，右声道在全部帧上等于 0。图 2 展示该信号在音频编辑器中的波形。
+
+![左声道单位直流输入](<images/Left Channel DC.png>)
+
+**图 2. 输入测试信号。** 上方左声道保持单位正幅度，下方右声道保持零。右侧刻度为 dB 显示，红色水平线为零幅度参考。
+
+Mixer 条件对 Master 轨道的 Panning 控件施加自动化，图 3 的自动化片段标为 `Master - Panning`。Audio Clip 条件对音频片段通道的声像控件施加自动化，图 4 中标为 `Left Channel DC - Channel panning`。
+
+![Mixer 声像自动化设置](<images/FL Studio Mixer Panning.png>)
+
+**图 3. Mixer 控制位置。** 自动化目标为 Mixer Master 的声像旋钮，播放列表中的直线覆盖测试音频的时间范围。
+
+![Audio Clip 声像自动化设置](<images/FL Studio Audio Clip Panning.png>)
+
+**图 4. Audio Clip 控制位置。** 自动化目标为音频片段通道设置中的 PAN 旋钮。图中 `Remove DC offset` 和 `Normalize` 均处于关闭状态，保留输入直流及其幅度基准。
+
+### 3.2 实验文件与声像扫描
+
+| 项目 | 设置或数值 |
+|---|---|
+| 输入、输出格式 | 双声道 WAV，IEEE 754 float32 |
+| 采样率 $f_s$ | $48000\,\mathrm{Hz}$ |
+| 帧数 $N$ | $384000$ |
+| 时长 $T=N/f_s$ | $8\,\mathrm{s}$ |
+| 声像扫描 | 从全左到全右的线性自动化 |
+| 实验组合 | 两类控制位置 × 两种声像法则 |
+| 输出文件 | 每种组合一份，共四份 |
+
+四份输出位于 `output-wav-files/`，分别为 `Mixer Circular Panning.wav`、`Mixer Triangular Panning.wav`、`Audio Clip Circular Panning.wav` 和 `Audio Clip Triangular Panning.wav`；对应工程位于 `fl-studio-projects/`。
+
+为将样本序号转换为声像坐标，定义第 $n$ 帧的**名义声像位置** $\bar p_n$：
+
+$$
+\bar p_n=-1+\frac{2t_n}{T}
+=-1+\frac{2n}{N},\qquad n=0,\ldots,N-1.
+\tag{7}
+$$
+
+其中横线表示由实验时间轴指定的参数值。$n=192000$ 对应居中；最后一帧对应 $\bar p_{N-1}=1-2/N\approx0.999994792$。理论全右位置 $p=1$ 对应 8 s 处的区间边界。
+
+### 3.3 残差定义
+
+原始 float32 样本转换为 float64 后用于计算。对输出声道 $c$（$c=L$ 或 $R$），记 $\widehat y_c(p)$ 为单位左声道输入时公式预测的输出，定义残差
+
+$$
+e_c[n]=y_c[n]-\widehat y_c(\bar p_n).
+\tag{8}
+$$
+
+使用最大绝对残差 $E_{\infty,c}$ 和残差均方根 $E_{\mathrm{RMS},c}$ 衡量一致性：
+
+$$
+E_{\infty,c}=\max_n|e_c[n]|,\qquad
+E_{\mathrm{RMS},c}=
+\sqrt{\frac1N\sum_{n=0}^{N-1}e_c[n]^2}.
+\tag{9}
+$$
+
+全部 $384000$ 帧均参与统计，幅度以输入的单位幅度为参考。分析代码同时计算另一种端点约定 $\bar p_n=-1+2n/(N-1)$ 的结果，以检查时间坐标选择对残差的影响。
+
+## 4. 辨识结果：四种声像法则的完整公式
+
+以下四个矩阵的元素均仅以 $p\in[-1,1]$ 为参数。将相应矩阵代入式（2），即可由左右输入计算左右输出。下标中的 Mixer、Clip 表示控制位置，Circ、Tri 分别表示 Circular 和 Triangular。
+
+### 4.1 Mixer × Circular
+
+$$
+\boxed{
+A_{\mathrm{Mixer,Circ}}(p)=
 \begin{cases}
 \begin{bmatrix}
-u(1+v)/2&u(1-v)/2\\
-0&v
-\end{bmatrix},&-1\le p\le0,\\[6pt]
+\dfrac{\cos\!\left(\frac{\pi(p+1)}4\right)
+ \left[1+\sqrt2\sin\!\left(\frac{\pi(p+1)}4\right)\right]}{\sqrt2}
+&
+\dfrac{\cos\!\left(\frac{\pi(p+1)}4\right)
+ \left[1-\sqrt2\sin\!\left(\frac{\pi(p+1)}4\right)\right]}{\sqrt2}
+\\[6pt]
+0&\sqrt2\sin\!\left(\frac{\pi(p+1)}4\right)
+\end{bmatrix},
+&-1\le p\le0,\\[14pt]
 \begin{bmatrix}
-u&0\\
-v(1-u)/2&v(1+u)/2
-\end{bmatrix},&0\le p\le1.
+\sqrt2\cos\!\left(\frac{\pi(p+1)}4\right)&0\\[6pt]
+\dfrac{\sin\!\left(\frac{\pi(p+1)}4\right)
+ \left[1-\sqrt2\cos\!\left(\frac{\pi(p+1)}4\right)\right]}{\sqrt2}
+&
+\dfrac{\sin\!\left(\frac{\pi(p+1)}4\right)
+ \left[1+\sqrt2\cos\!\left(\frac{\pi(p+1)}4\right)\right]}{\sqrt2}
+\end{bmatrix},
+&0<p\le1.
+\end{cases}}
+\tag{10}
+$$
+
+左偏时，右输入通过第一行第二列的系数混入左输出；右偏时，左输入通过第二行第一列的系数混入右输出。实测左输入响应在左偏区间出现内部幅度极大值，右输出在右偏区间逐渐增大。
+
+### 4.2 Mixer × Triangular
+
+$$
+\boxed{
+A_{\mathrm{Mixer,Tri}}(p)=
+\begin{cases}
+\begin{bmatrix}
+1+\dfrac p2&-\dfrac p2\\[4pt]
+0&1+p
+\end{bmatrix},
+&-1\le p\le0,\\[12pt]
+\begin{bmatrix}
+1-p&0\\[4pt]
+\dfrac p2&1-\dfrac p2
+\end{bmatrix},
+&0<p\le1.
 \end{cases}}
 \tag{11}
 $$
 
-其中 $u,v$ 均在当前 $p$ 处取值。对于 $p<0$，右输入通过 $A_{12}$ 混入左输出；对于 $p>0$，左输入通过 $A_{21}$ 混入右输出。四种条件在居中处都满足 $A(0)=I$。
+这一变换具有相同方向的交叉混合结构，所有非零系数均为分段线性函数。对单位左输入，左偏时左输出为 $1+p/2$；右偏时左右输出分别为 $1-p$ 和 $p/2$。
 
-以左偏分支为例，式（11）可分解为
+### 4.3 Audio Clip × Circular
 
 $$
-A_{\mathrm{Mixer}}(p)=
-\begin{bmatrix}u&0\\0&v\end{bmatrix}
-\begin{bmatrix}(1+v)/2&(1-v)/2\\0&1\end{bmatrix}.
+\boxed{
+A_{\mathrm{Clip,Circ}}(p)=
+\begin{bmatrix}
+\sqrt2\cos\!\left(\dfrac{\pi(p+1)}4\right)&0\\[6pt]
+0&\sqrt2\sin\!\left(\dfrac{\pi(p+1)}4\right)
+\end{bmatrix},
+\qquad -1\le p\le1.}
 \tag{12}
 $$
 
-这是“混合后施加增益”的一个等效代数表示。仅凭外部输入—输出数据不能识别软件内部的运算顺序、指令序列或查表实现，因此式（12）不应解释为源代码层面的实现证据。
+两个声道分别乘以正弦或余弦增益。左声道输入在全左处获得 $\sqrt2$ 倍增益，居中处为单位增益，全右处为零。
 
-![四种条件的实测响应与模型](images/research/01-response.png)
+### 4.4 Audio Clip × Triangular
 
-**图 1. 左声道单位直流激励的响应。** 蓝色为左输出，橙色为右输出；实线为解析模型，空心符号为均匀选取的 61 个实测样本。抽取样本仅用于显示，统计使用全部数据。横坐标为式（5）的名义声像位置。图中宏观重合不足以判定数值精度，残差另见图 3。
+$$
+\boxed{
+A_{\mathrm{Clip,Tri}}(p)=
+\begin{cases}
+\begin{bmatrix}1&0\\0&1+p\end{bmatrix},
+&-1\le p\le0,\\[8pt]
+\begin{bmatrix}1-p&0\\0&1\end{bmatrix},
+&0<p\le1.
+\end{cases}}
+\tag{13}
+$$
 
-![完整矩阵模型](images/research/02-matrix.png)
+偏转侧的同侧增益保持为 1，另一侧随声像位置线性衰减。对单位左输入，左输出在左半区保持为 1，在右半区线性降至零。
 
-**图 2. 四种条件的矩阵系数。** 实线表示由左声道激励约束的第一列模型，虚线表示依赖左右对称性补全的第二列；本图均为模型曲线，不是四个元素分别独立测得的结果。部分零系数曲线重叠。
+### 4.5 响应对比与结构总结
 
-## 5. 定量检验与误差解释
+![四种声像法则的实测响应与解析公式](images/figures/01-response.png)
 
-### 5.1 全范围前向残差
+**图 5. 单位左声道输入的输出响应。** 蓝色和橙色分别表示左、右输出；实线为式（10）—（13）的计算结果，空心符号为均匀选取的 61 个实测样本。横坐标使用式（7）的名义声像位置。对应的原始波形截图见附录 A。
 
-表 1 给出按式（5）和式（6）计算的残差。数值保留四位有效数字，完整精度结果由分析程序保存。
+两份 Audio Clip 输出的右声道在全部帧上均为数值零；两份 Mixer 输出的右声道在右半段出现信号。两类控制的核心区别是：**Audio Clip 分别调整两侧增益，Mixer 将另一侧输入混入声像偏转侧。**
 
-**表 1. 名义线性声像轨迹下的逐样本幅度残差。**
+![四种声像法则的矩阵系数](images/figures/02-matrix.png)
+
+**图 6. 完整矩阵的四个系数。** 实线为通过左声道激励辨识的第一列，虚线为按式（6）补全的第二列。蓝色表示同侧增益，橙色表示交叉混合增益；部分零系数曲线重合。
+
+四种公式均在居中处满足 $A(0)=I$，其中 $I$ 为 $2\times2$ 单位矩阵。因此，居中时输出逐声道等于输入。
+
+## 5. 定量验证
+
+### 5.1 全范围逐样本残差
+
+按式（7）—（9）计算，得到表 1。
+
+**表 1. 四种声像法则的前向残差。**
 
 | 条件 | 左输出最大绝对残差 | 左输出 RMS | 右输出最大绝对残差 | 右输出 RMS |
 |---|---:|---:|---:|---:|
@@ -222,140 +330,140 @@ $$
 | Audio Clip Circular | $5.826\times10^{-5}$ | $2.372\times10^{-5}$ | $0$ | $0$ |
 | Audio Clip Triangular | $5.363\times10^{-5}$ | $2.122\times10^{-5}$ | $0$ | $0$ |
 
-若改用首末帧覆盖双端点的约定，四种条件的左输出最大绝对残差依次变为 $6.464\times10^{-5}$、$5.732\times10^{-5}$、$6.366\times10^{-5}$ 和 $5.732\times10^{-5}$。端点约定改变部分数值，但不改变残差量级或两类控制的结构差异。
+使用首末帧覆盖双端点的坐标约定时，四种条件的左输出最大绝对残差依次为 $6.464\times10^{-5}$、$5.732\times10^{-5}$、$6.366\times10^{-5}$ 和 $5.732\times10^{-5}$。两种约定得到相同的误差量级。
 
-![全范围残差及局部细节](images/research/03-residual.png)
+![全范围残差与局部波形](images/figures/03-residual.png)
 
-**图 3. 实测值减去名义轨迹模型值。** 左列将全体样本划分为 800 个连续区间，显示各区间的最小—最大残差包络及其上下界中点；右列显示前 100 ms 的全部样本。每个子图独立设置纵轴范围，单位均为 $10^{-6}$。包络计算包含所有样本，避免简单抽点掩盖极值；右列可见结构性变化，不能将这些残差视作独立白噪声。
+**图 7. 实测值减去公式预测值。** 左列将所有样本划分为 800 个连续区间，绘制每个区间的最小—最大残差包络及其上下界中点；右列显示前 100 ms 的全部样本。各子图独立设置纵轴范围，单位为 $10^{-6}$。包络保留各区间极值，局部波形展示残差的时间结构。
 
-### 5.2 消去声像参数的左右输出关系
+### 5.2 消去声像参数的输出关系检验
 
-前向残差同时受模型形式与实际声像轨迹影响。为减少对式（5）的依赖，可在 Mixer 的右偏分支中消去声像参数，直接比较同一帧的两个输出。以下关系使用同一份渲染的不同输出，属于额外的结构一致性检验，但不是新实验。
+对于 Mixer 的右偏区间，可以消去 $p$，直接检验同一帧左右输出之间的关系。这样，公式的检验只需使用输出幅度。
 
-对 Circular，右偏时 $y_L=u$，由 $u^2+v^2=2$ 及 $v\ge0$ 得
-
-$$
-\widehat y_R=\frac{(1-y_L)\sqrt{2-y_L^2}}2.
-\tag{13}
-$$
-
-对 Triangular，右偏时 $u=1-p$、$v=1$，因而
+对 Mixer Circular，式（10）给出
 
 $$
-\widehat y_R=\frac{1-y_L}{2}.
+\widehat y_R=
+\frac{(1-y_L)\sqrt{2-y_L^2}}2.
 \tag{14}
 $$
 
-在所有名义 $p>0$ 的 $191999$ 帧上，取关系残差 $r=y_R-\widehat y_R$，结果如下。
-
-**表 2. 不显式使用声像轨迹的输出关系检验。**
-
-| 条件 | 检验关系 | 最大绝对残差 | RMS |
-|---|---|---:|---:|
-| Mixer Circular | 式（13） | $8.411\times10^{-6}$ | $1.906\times10^{-6}$ |
-| Mixer Triangular | 式（14） | $3.770\times10^{-6}$ | $1.064\times10^{-6}$ |
-
-式（14）也可写成 $y_L+2y_R=1$，但此时残差变为 $2r$，最大绝对值和 RMS 都相应加倍。比较不同报告或不同实现的统计时，必须先统一残差定义。
-
-![消去声像参数后的输出关系](images/research/04-identity.png)
-
-**图 4. Mixer 右偏分支的输出关系与残差分布。** 左列以实测左输出为横坐标，实线为式（13）或式（14），空心符号显示 61 对实测值；右列直方图包含所有名义右偏样本。残差没有通过再次拟合缩放或偏移消除。
-
-输出关系残差小于前向残差，说明部分前向误差与名义声像坐标的指定有关，同时支持两个输出之间的函数约束。但关系残差仍非零，不能据此断言剩余误差全部来自时间轴，也不能将其直接解释为音频引擎中某个单独环节的误差。
-
-### 5.3 数值精度与归因边界
-
-图 3 中的结构性残差与控制参数的离散更新、插值或平滑相容；它们也可能包含增益计算近似、信号路径的微小尺度误差和浮点运算误差。现有实验没有直接记录引擎实际采用的 $p[n]$，也没有改变扫描速度、采样率或缓冲条件作对照，因此无法唯一分离这些来源。
-
-float32 在 $[1,2$) 区间的相邻数间距为 $2^{-23}\approx1.192\times10^{-7}$，而在 $[0.5,1$) 区间为 $2^{-24}\approx5.960\times10^{-8}$。表 1 中约 $10^{-5}$ 量级的残差明显大于单位幅度附近的一次 float32 存储舍入量级；但这并不排除整个计算链中有限精度与参数近似的累计影响。
-
-若用左输出反解声像参数，再把该参数代回同一个左输出表达式，所得小残差主要反映反解与重构的一致性，不能独立证明原模型正确。尤其在输出对声像参数导数接近零的位置，逆问题会变得病态。本文因此不以这种自洽重构残差声称“已经达到浮点精度”或“模型误差全部消除”。
-
-## 6. 模型的条件性推论
-
-以下结论均由式（7）—（11）推出。除明确列出的左声道激励观测外，它们不是额外输入条件的实测结果。
-
-### 6.1 极端声像与声道求和
-
-令 $k=\sqrt2$ 对应 Circular，$k=1$ 对应 Triangular。两端的矩阵为
+对 Mixer Triangular，式（11）给出
 
 $$
-A_{\mathrm{Mixer}}(-1)=\frac{k}{2}\begin{bmatrix}1&1\\0&0\end{bmatrix},\qquad
-A_{\mathrm{Mixer}}(1)=\frac{k}{2}\begin{bmatrix}0&0\\1&1\end{bmatrix},
+\widehat y_R=\frac{1-y_L}{2}.
 \tag{15}
 $$
 
+这里 $y_L$ 是同一帧的实测左输出，$\widehat y_R$ 是由该左输出预测的右输出。令关系残差 $r=y_R-\widehat y_R$，在全部名义 $p>0$ 的 $191999$ 帧上得到：
+
+**表 2. Mixer 左右输出关系的残差。**
+
+| 条件 | 最大绝对残差 | RMS |
+|---|---:|---:|
+| Mixer Circular，式（14） | $8.411\times10^{-6}$ | $1.906\times10^{-6}$ |
+| Mixer Triangular，式（15） | $3.770\times10^{-6}$ | $1.064\times10^{-6}$ |
+
+![Mixer 左右输出关系检验](images/figures/04-identity.png)
+
+**图 8. 消去声像参数后的输出关系。** 左列实线为式（14）或式（15），空心符号为 61 对实测输出；右列直方图包含所有右偏样本的关系残差。
+
+输出关系残差较前向残差减小，说明声像时间坐标对前向误差具有影响，同时表明左右输出之间满足所辨识的函数关系。图 7 中残差呈现结构性变化，与控制参数更新、插值及有限精度计算等机制相容。
+
+float32 在 $[1,2)$ 区间的相邻数间距为 $2^{-23}\approx1.192\times10^{-7}$，在 $[0.5,1)$ 区间为 $2^{-24}\approx5.960\times10^{-8}$。表 1 的残差高于单位幅度附近单次存储舍入的量级，反映的是扫描轨迹与整个处理过程的综合差异。
+
+## 6. 声像变换的性质
+
+### 6.1 极端声像处的输出
+
+令 $k$ 表示端点增益常数：Circular 对应 $k=\sqrt2$，Triangular 对应 $k=1$。四个公式在端点可归纳为
+
 $$
-A_{\mathrm{Clip}}(-1)=\begin{bmatrix}k&0\\0&0\end{bmatrix},\qquad
-A_{\mathrm{Clip}}(1)=\begin{bmatrix}0&0\\0&k\end{bmatrix}.
+A_{\mathrm{Mixer}}(-1)=\frac{k}{2}
+\begin{bmatrix}1&1\\0&0\end{bmatrix},
+\qquad
+A_{\mathrm{Mixer}}(1)=\frac{k}{2}
+\begin{bmatrix}0&0\\1&1\end{bmatrix},
 \tag{16}
 $$
 
-Mixer 在全左或全右位置保留的是左右输入之和：Circular 为 $(x_L+x_R)/\sqrt2$，Triangular 为 $(x_L+x_R)/2$。Audio Clip 则只保留偏转侧的原输入声道，并施加对应的 $k$ 倍增益。
+$$
+A_{\mathrm{Clip}}(-1)=
+\begin{bmatrix}k&0\\0&0\end{bmatrix},
+\qquad
+A_{\mathrm{Clip}}(1)=
+\begin{bmatrix}0&0\\0&k\end{bmatrix}.
+\tag{17}
+$$
 
-因此，在模型下，Mixer 极端声像会消除反相输入 $(s,-s)^{\mathsf T}$，Audio Clip 极端声像则不会因左右求和而抵消。上述端点矩阵均为秩一矩阵，但它们丢失的输入方向不同；不能仅以“输出只剩一个声道”判定两类控制等价。
+因此，Mixer 全偏时，偏转侧输出为左右输入的加权和：Circular 为 $(x_L+x_R)/\sqrt2$，Triangular 为 $(x_L+x_R)/2$。这给出了官方 “mono-sum” 描述中的具体比例系数。Audio Clip 全偏时，偏转侧输出为该侧原输入的 $k$ 倍。
 
-**表 3. 左声道单位输入的模型端点与文件边界样本。**
+对于左右反相输入 $(s,-s)^{\mathsf T}$，其中 $s$ 为任意瞬时样本值，Mixer 全偏时两侧输入在求和中抵消；Audio Clip 则保留偏转侧的输入分量。
 
-| 条件 | 模型 $p=-1$：$(y_L,y_R)$ | 实测首帧 | 模型 $p=1$：$(y_L,y_R)$ | 实测末帧 |
+**表 3. 单位左输入的模型端点与实测边界样本。**
+
+| 条件 | 公式在 $p=-1$ 的输出 $(y_L,y_R)$ | 实测首帧 | 公式在 $p=1$ 的输出 $(y_L,y_R)$ | 实测末帧 |
 |---|---|---|---|---|
 | Mixer Circular | $(0.707106781,0)$ | $(0.707106709,0)$ | $(0,0.707106781)$ | $(5.556781\times10^{-6},0.707104146)$ |
 | Mixer Triangular | $(0.5,0)$ | $(0.499999881,0)$ | $(0,0.5)$ | $(4.999208\times10^{-6},0.499998212)$ |
 | Audio Clip Circular | $(1.414213562,0)$ | $(1.414212704,0)$ | $(0,0)$ | $(5.554710\times10^{-6},0)$ |
 | Audio Clip Triangular | $(1,0)$ | $(0.999999821,0)$ | $(0,0)$ | $(5.000166\times10^{-6},0)$ |
 
-末帧未到达式（5）定义的全右端点，其非零小量不应直接判定为全右位置的残留通路。
+末帧的名义位置为 $1-2/N$；表中分别列出理论端点与采样边界，便于比较。
 
-### 6.2 同相双单声道输入与等功率条件
+### 6.2 同相双声道输入的功率关系
 
-对于左右完全相同的输入 $\boldsymbol{x}=(s,s)^{\mathsf T}$，两类控制在同一声像法则下都满足
-
-$$
-A_{\mathrm{Mixer}}(p)\begin{bmatrix}s\\s\end{bmatrix}
-=A_{\mathrm{Clip}}(p)\begin{bmatrix}s\\s\end{bmatrix}
-=\begin{bmatrix}u(p)s\\v(p)s\end{bmatrix}.
-\tag{17}
-$$
-
-这意味着只用同相、同幅的左右输入，无法区分两种控制的交叉混合结构。必须将“左右复制同一个单声道信号”与本实验的“只有左声道有信号”区分开。
-
-以两声道平方和作为数字信号功率的瞬时对应量，Circular 对式（17）的输入满足
+对于左右相同的输入 $\boldsymbol{x}=(s,s)^{\mathsf T}$，两类声像控制在相同声像法则下得到相同输出。Circular 为
 
 $$
-y_L^2+y_R^2=(u^2+v^2)s^2=2s^2=x_L^2+x_R^2.
+\boldsymbol{y}=
+\begin{bmatrix}
+\sqrt2\cos\!\left(\dfrac{\pi(p+1)}4\right)s\\[4pt]
+\sqrt2\sin\!\left(\dfrac{\pi(p+1)}4\right)s
+\end{bmatrix};
 \tag{18}
 $$
 
-Triangular 对同一输入则有
+Triangular 为
 
 $$
-\frac{y_L^2+y_R^2}{x_L^2+x_R^2}
-=\frac{1+(1-|p|)^2}{2}\quad(s\ne0),
+\boldsymbol{y}=
+\begin{cases}
+\begin{bmatrix}s\\(1+p)s\end{bmatrix},&-1\le p\le0,\\[6pt]
+\begin{bmatrix}(1-p)s\\s\end{bmatrix},&0<p\le1.
+\end{cases}
 \tag{19}
 $$
 
-即由中心的 1 降至端点的 $1/2$。对随时间变化的 $s$，可对平方量作时间平均得到相应均方功率关系。这里讨论的是数字声道功率，不是扬声器声场中的声压、声学干涉或主观响度。
-
-Circular 的式（18）不能推广为“任意双声道输入均等功率”。若要求对每个输入向量都保持平方和，必须有 $A^{\mathsf T}A=I$；本研究的端点矩阵不满足这一条件。更一般地，固定 $p$ 时令输入二阶矩矩阵 $R_x=\mathbb{E}[\boldsymbol{x}\boldsymbol{x}^{\mathsf T}]$，则
+定义输入、输出的瞬时双声道平方和分别为 $Q_x=x_L^2+x_R^2$、$Q_y=y_L^2+y_R^2$。对这些平方量作时间平均即得到相应数字信号的均方功率。Circular 满足
 
 $$
-P_y=\mathbb{E}[\boldsymbol{y}^{\mathsf T}\boldsymbol{y}]
-=\operatorname{tr}(A R_x A^{\mathsf T}).
+Q_y=2s^2=Q_x,
 \tag{20}
 $$
 
-对于含交叉项的 Mixer，输出功率还依赖左右输入的相关性。对本实验的单侧输入 $(1,0)^{\mathsf T}$，功率对应量为 $f(p)^2+h(p)^2$，其曲线见图 5(b)，并非常数。
-
-### 6.3 Mixer Circular 的内部幅度极大值
-
-在 $p\in[-1,0]$ 的左偏分支，令 $\theta\in[0,\pi/4]$。左声道单位输入的左输出为
+即对同相同幅双声道输入保持功率。Triangular 对应
 
 $$
-f(\theta)=\frac{\sqrt2\cos\theta+\sin2\theta}{2}.
+\frac{Q_y}{Q_x}=
+\frac{1+(1-|p|)^2}{2},\qquad s\ne0,
 \tag{21}
 $$
 
-驻点条件为
+从中心的 1 降至端点的 $1/2$。
+
+对单侧输入 $(1,0)^{\mathsf T}$，输出平方和为 $f(p)^2+h(p)^2$，随声像位置变化，如图 9(b)。对于一般双声道输入，Mixer 的交叉混合还使输出功率依赖左右输入的相关性。
+
+### 6.3 Mixer Circular 的内部幅度峰值
+
+对单位左输入，在 $p\in[-1,0]$ 区间定义角变量 $\theta=\pi(p+1)/4$，因此 $\theta\in[0,\pi/4]$。由式（10），左输出可写为
+
+$$
+f(\theta)=\frac{\sqrt2\cos\theta+\sin2\theta}{2}.
+\tag{22}
+$$
+
+对 $\theta$ 求导，驻点满足
 
 $$
 \frac{\mathrm df}{\mathrm d\theta}=0
@@ -363,95 +471,112 @@ $$
 \iff 4\sin^2\theta+\sqrt2\sin\theta-2=0.
 $$
 
-在该区间内唯一的驻点满足
+记极大值处的角变量和声像位置分别为 $\theta_*$、$p_*$，则
 
 $$
-\sin\theta_*=\frac{\sqrt{34}-\sqrt2}{8},\qquad
-p_*=\frac{4\theta_*}{\pi}-1\approx-0.255318408.
-\tag{22}
+\sin\theta_*=\frac{\sqrt{34}-\sqrt2}{8},
+\qquad
+p_*=\frac4\pi\arcsin\!\left(\frac{\sqrt{34}-\sqrt2}{8}\right)-1
+\approx-0.255318408.
+\tag{23}
 $$
 
-其二阶导数为负，且两个区间端点均不大于该点，因此
+该点二阶导数为负；结合两端值可得最大幅度
 
 $$
 f_{\max}=\frac{\sqrt{142+34\sqrt{17}}}{16}
 \approx1.049898788,
-\qquad20\log_{10}f_{\max}\approx0.422949\,\mathrm{dB}.
-\tag{23}
+\qquad
+20\log_{10}f_{\max}\approx0.422949\,\mathrm{dB}.
+\tag{24}
 $$
 
-实测 Mixer Circular 左输出最大值为 $1.049898863$，与式（23）相差约 $7.443\times10^{-8}$。这是一个峰值标量的吻合，不代表全曲线残差也处于同一量级；实测峰值对应的名义声像位置同样受控制轨迹误差影响。
+实测 Mixer Circular 左输出最大值为 $1.049898863$，与式（24）相差约 $7.443\times10^{-8}$。该峰值位于全左与居中之间，构成这一组合的局部电平凸起。
 
-该现象是 Mixer Circular 对单侧输入产生的**内部极大值**。Audio Clip Circular 的左输出在全左端点可达 $sqrt2$，对应约 $+3.010300\,\mathrm{dB}$，所以“只有 Mixer Circular 会超过单位幅度”并不成立。float32 文件可以存储大于 1 的样本；样本超过 1 本身不等价于已经发生削波，是否削波还取决于后续处理及最终编码。
+Audio Clip Circular 的最大左声道增益位于全左端点，为 $\sqrt2$，对应 $+3.010300\,\mathrm{dB}$，与官方所述端点约增加 3 dB 一致。浮点音频可以保存这些超过单位幅度的样本；最终输出的削波情况取决于后续处理和编码范围。
 
-![功率与峰值的模型推论](images/research/05-consequences.png)
+![功率关系与内部峰值](images/figures/05-consequences.png)
 
-**图 5. 模型的条件性推论。** (a) 左右复制同一信号时，输出与输入的双声道平方和之比；两类控制在此输入下重合。(b) 左声道单位输入时的输出平方和，展示 Circular 不对任意立体声输入保持功率。(c) Mixer Circular 左偏分支的内部幅度极大值。三幅均由模型计算，不表示新增渲染实验。
+**图 9. 由声像公式计算的功率与峰值特征。** (a) 同相同幅双声道输入的输出／输入平方和之比；(b) 单位左输入的输出平方和；(c) Mixer Circular 左偏区间的幅度极大值。
 
-## 7. 有效性范围与后续验证
+### 6.4 与官方说明的对应关系
 
-现有证据对四种条件的第一列响应提供了密集的采样约束，对右偏 Mixer 的两个输出还提供了不显式依赖声像轨迹的关系检验。但是，完整矩阵及其对一般音频的应用仍依赖以下未被独立验证的前提。
-
-| 待验证问题 | 现有数据的限制 | 可区分该问题的补充实验 |
-|---|---|---|
-| 左右交换对称性 | 仅有左输入激励，无法独立测量第二列 | 使用 $(0,1)^{\mathsf T}$ 扫描，并比较 $A_{12}(p)$ 与 $A_{21}(-p)$、$A_{22}(p)$ 与 $A_{11}(-p)$ |
-| 线性、齐次性与零偏置 | 只有单一幅度的直流输入 | 在固定声像处使用静音、多个正负幅度及两输入之和，检验零输入响应、缩放与叠加 |
-| 对音频输入无记忆 | 直流主要探测零频响应 | 在固定声像处使用脉冲或宽带信号，测量频率依赖、延迟及跨时刻响应 |
-| 名义声像与实际参数的一致性 | 连续扫描同时包含控制系统行为 | 使用固定声像平台；另改变扫描时长、方向及采样率，比较稳态系数与扫描残差 |
-| 实验重复性及外部有效性 | 每个条件只有一次存档渲染 | 重复渲染并记录设置；对其他 Mixer 路径、通道类型及软件版本单独复测 |
-
-优先补充右声道激励和固定声像平台，可分别验证对称补全与参数时间映射。宽带验证则决定是否可以把本次直流辨识结果推广为对一般音频成立的无记忆增益矩阵。重复渲染还可区分确定性的处理误差与运行间变异。
-
-## 8. 结论
-
-在无记忆线性与左右交换对称性的假设下，四份左声道直流扫描数据可由式（7）—（11）的分段矩阵模型共同描述。Audio Clip 的实测左输入至右输出通路为零，对称补全后对应对角平衡变换；Mixer 的右偏响应具有非零左输入至右输出通路，对称补全后对应随声像方向切换的交叉混合。
-
-全范围名义轨迹下的最大绝对残差低于 $6.1\times10^{-5}$，消去声像参数后的 Mixer 输出关系残差低于 $8.5\times10^{-6}$。这些数值支持模型与存档渲染在所测条件下的一致性，但尚不能唯一确定软件内部实现，也不能将全部残差归因于自动化。由模型得到的极端声像求和、同相输入下的 Circular 等功率关系，以及 Mixer Circular 的内部幅度极大值，均应连同其输入条件和辨识前提使用。
-
-## 附录 A. 数据来源与可复现流程
-
-本报告的定量依据为项目内的一份输入、四份输出及四份工程文件；未采用无法在当前资料中复算的额外音频实验，也未将软件手册描述作为公式的测量证据。所有输入与输出 WAV、四个 FLP 的 SHA-256 校验值由分析程序写入 `analysis-results/statistics.json`，用于标识本报告对应的数据版本。
-
-| 内容 | 文件或目录 |
+| 官方描述 | 本研究给出的定量结果 |
 |---|---|
-| 输入信号 | [Left Channel DC.wav](<input-wav-file/Left Channel DC.wav>) |
-| 原始输出 | [output-wav-files](output-wav-files/) |
-| 四个实验工程 | [fl-studio-projects](fl-studio-projects/) |
-| Mixer 控制对象记录 | [Mixer 设置截图](<images/FL Studio Mixer Panning.png>) |
-| Audio Clip 控制对象记录 | [Audio Clip 设置截图](<images/FL Studio Audio Clip Panning.png>) |
-| 项目声像法则界面记录 | [Panning law 设置截图](<images/FL Studio Panning Law Settings.png>) |
-| 全精度统计、端点约定敏感性与数据哈希 | [statistics.json](analysis-results/statistics.json) |
-| 机器生成的残差表 | [residual-table.md](analysis-results/residual-table.md) |
+| Circular 中心与两端相差约 3 dB [1] | 同相同幅输入下，中心每侧增益为 1，端点活动声道增益为 $\sqrt2$，相差 $3.010300\,\mathrm{dB}$ |
+| Audio Clip 在两端增加电平 [1] | 式（12）在中心为单位增益，在活动侧端点为 $\sqrt2$ 倍增益 |
+| Triangular 使用无补偿模式 [1] | 式（13）保持偏转侧单位增益，另一侧线性衰减；同相双声道输入的总功率按式（21）变化 |
+| Mixer 将一侧混入另一侧 [2] | 式（10）、（11）的非对角元素给出交叉混合的具体系数 |
+| Mixer 全偏时为左右单声道求和 [2] | 式（16）给出 Circular 的 $1/\sqrt2$ 与 Triangular 的 $1/2$ 求和比例 |
+
+## 7. 结论
+
+本实验得到了 FL Studio 20.8.3.2304 四种声像控制情形的完整双声道变换：Mixer Circular 由式（10）给出，Mixer Triangular 由式（11）给出，Audio Clip Circular 由式（12）给出，Audio Clip Triangular 由式（13）给出。四个公式均以声像位置 $p$ 为唯一控制参数，可直接用于计算左右输入到左右输出的变换。
+
+两类控制的结构区别在于交叉混合：Audio Clip 分别改变两声道增益；Mixer 将另一侧信号混入偏转侧，并在极端声像处形成加权单声道和。Circular 与 Triangular 分别采用三角函数和分段线性系数。它们在居中处均保持输入，在同相同幅双声道输入下表现出相同控制位置间的等价性。
+
+逐样本比较与消参关系检验共同支持上述公式：全范围前向最大绝对残差低于 $6.1\times10^{-5}$，Mixer 输出关系最大绝对残差低于 $8.5\times10^{-6}$。公式进一步解释了 Circular 的功率补偿、Mixer 全偏求和的比例，以及 Mixer Circular 单侧输入响应中的 $+0.423\,\mathrm{dB}$ 内部峰值，补全了官方定性说明所缺少的具体变换关系。
+
+## 8. 局限与后续验证
+
+本研究使用每种条件一次、单一幅度的左声道直流扫描。无记忆性、线性性和左右交换对称性作为建模假设，分别可通过宽带或脉冲输入、多幅度与叠加输入、右声道独立输入进一步验证。直流测量直接约束零频响应，推广到一般音频时可用固定声像的宽带测量检查频率响应与延迟。
+
+前向残差同时包含公式近似和实际控制轨迹相对于名义时间轴的差异。当前资料未直接记录音频引擎逐样本采用的声像参数；固定声像平台、改变扫描速度与采样率的对照实验有助于分离误差来源。本文报告描述性残差统计，独立重复渲染可进一步评估重复性。
+
+本文对存档音频进行复算，未重新运行 FL Studio 渲染。实测控制对象为 Mixer Master 和 Audio Clip Channel panning；其他轨道路由、插件通道及软件版本可使用相同方法复测。所引用在线手册为 2026-10-25 查阅的版本。输入—输出公式描述外部变换关系，软件内部运算顺序仍需实现层面的证据。
+
+## 参考文献
+
+[1] Image-Line. *FL Studio Online Manual: Project General Settings*, “Panning law”. [官方页面](https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/songsettings_settings.htm#Panning_Law). 查阅日期：2026-10-25。
+
+[2] Image-Line. *FL Studio Online Manual: Mixer*, “Panning”. [官方页面](https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/mixer.htm). 查阅日期：2026-10-25。
+
+## 附录 A. 四种条件的原始波形截图
+
+以下截图展示四份渲染在音频编辑器中的直接观察结果。每图上半部分为左声道，下半部分为右声道，横轴为时间；纵轴采用编辑器的 dB 显示。它们与图 5 的线性幅度图共同呈现输出特征。
+
+![Mixer Circular 原始输出](<images/Mixer Circular Panning.png>)
+
+**图 A1. Mixer Circular。** 左输出先升后降，在居中之前略高于单位幅度；右输出从扫描中点之后增加，接近全右时约为 −3 dB。
+
+![Mixer Triangular 原始输出](<images/Mixer Triangular Panning.png>)
+
+**图 A2. Mixer Triangular。** 左输出从约 −6 dB 增至居中的 0 dB，再下降；右输出在右半段增加，末端接近 −6 dB。
+
+![Audio Clip Circular 原始输出](<images/Audio Clip Circular Panning.png>)
+
+**图 A3. Audio Clip Circular。** 左输出从约 +3 dB 逐渐下降，右输出保持为零。
+
+![Audio Clip Triangular 原始输出](<images/Audio Clip Triangular Panning.png>)
+
+**图 A4. Audio Clip Triangular。** 左输出在前半段保持 0 dB，后半段下降；右输出保持为零。
+
+## 附录 B. 数据与复现
+
+项目内的一份输入、四份输出及四份工程构成实验资料。分析程序保存全精度统计和这些文件的 SHA-256 校验值，用于核对本报告所用的数据。
+
+| 内容 | 位置 |
+|---|---|
+| 输入音频 | [Left Channel DC.wav](<input-wav-file/Left Channel DC.wav>) |
+| 四份输出音频 | [output-wav-files/](output-wav-files/) |
+| 四份 FL Studio 工程 | [fl-studio-projects/](fl-studio-projects/) |
+| 实验截图 | [images/](images/) |
+| 五张分析图，PNG 与 SVG | [images/figures/](images/figures/) |
+| 全精度统计、端点约定比较与数据哈希 | [statistics.json](results/statistics.json) |
+| 项目结构和脚本说明 | [README.md](README.md) |
 
 在项目根目录执行：
 
 ```powershell
 uv sync
-uv run python scripts/research/build.py
+uv run python scripts/build.py
 ```
 
-本次复算环境为 Python 3.15.1、NumPy 2.5.4 和 Matplotlib 3.11.2。依赖由 `pyproject.toml` 与 `uv.lock` 记录。新程序从输入 WAV 核验逐样本激励，读取输出并重新计算全部统计，生成五张 PNG 及对应 SVG；不修改输入音频、输出音频或 FLP。脚本根据自身位置定位项目根目录，不依赖调用时的工作目录。
-
-## 附录 B. 绘图与分析源文件
-
-每张图独立维护，公共代码只承担数据读取、模型定义、统计辅助与绘图样式。单独执行某个图文件仅重新生成对应的 PNG 与 SVG。
-
-| 文件 | 职责 |
-|---|---|
-| [common.py](scripts/research/common.py) | WAV 验证与读取、名义声像网格、完整矩阵模型、公共样式与保存 |
-| [analyze.py](scripts/research/analyze.py) | 全样本统计、输出关系检验、峰值解析量与数据哈希 |
-| [fig_response.py](scripts/research/fig_response.py) | 图 1：实测第一列响应与模型 |
-| [fig_matrix.py](scripts/research/fig_matrix.py) | 图 2：完整矩阵及对称补全标识 |
-| [fig_residual.py](scripts/research/fig_residual.py) | 图 3：全范围残差包络和局部样本细节 |
-| [fig_identity.py](scripts/research/fig_identity.py) | 图 4：消去声像参数的输出关系与残差分布 |
-| [fig_consequences.py](scripts/research/fig_consequences.py) | 图 5：功率关系与内部幅度极大值 |
-| [build.py](scripts/research/build.py) | 顺序运行分析及五个独立绘图入口 |
-
-例如，仅重绘残差图或仅重算统计：
+仅计算统计或重绘单张图：
 
 ```powershell
-uv run python scripts/research/fig_residual.py
-uv run python scripts/research/analyze.py
+uv run python scripts/analyze.py
+uv run python scripts/fig_residual.py
 ```
 
-图件统一存放在 `images/research/`。PNG 用于本 Markdown 的直接显示，SVG 保留矢量曲线与文本，供后续论文排版使用。
+复算环境为 Python 3.15.1、NumPy 2.5.4、Matplotlib 3.11.2，依赖记录在 `pyproject.toml` 和 `uv.lock`。各图由独立的 `fig_*.py` 文件生成，公共数据读取与矩阵实现位于 `scripts/common.py`。

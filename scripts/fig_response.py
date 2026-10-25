@@ -1,4 +1,4 @@
-"""Figure 1: directly observed first column against the candidate model."""
+"""Report Figure 5: directly observed first column against the model."""
 import matplotlib.pyplot as plt
 import numpy as np
 from common import CASES, COLORS, matrix, measured, save, style

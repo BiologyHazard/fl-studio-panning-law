@@ -1,4 +1,4 @@
-"""Figure 5: conditional model predictions, not additional experiments."""
+"""Report Figure 9: model power relationships and the interior amplitude peak."""
 import matplotlib.pyplot as plt
 import numpy as np
 from common import CASES, COLORS, gains, matrix, save, style

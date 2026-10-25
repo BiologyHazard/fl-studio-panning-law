@@ -1,4 +1,4 @@
-"""Figure 2: full matrix, explicitly distinguishing symmetry-derived entries."""
+"""Report Figure 6: full matrix, distinguishing symmetry-derived entries."""
 import matplotlib.pyplot as plt
 import numpy as np
 from common import CASES, COLORS, matrix, save, style

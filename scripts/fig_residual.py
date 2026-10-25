@@ -1,4 +1,4 @@
-"""Figure 3: all-sample residual envelopes plus a non-decimated time detail."""
+"""Report Figure 7: all-sample residual envelopes and full-sample time detail."""
 import matplotlib.pyplot as plt
 import numpy as np
 from common import CASES, COLORS, matrix, measured, read_wav, save, style

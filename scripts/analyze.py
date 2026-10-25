@@ -56,12 +56,6 @@ def main():
     result = compute()
     RESULTS.mkdir(exist_ok=True)
     (RESULTS / "statistics.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    rows = ["| 条件 | 左输出最大绝对残差 | 左输出 RMS | 右输出最大绝对残差 | 右输出 RMS |",
-            "|---|---:|---:|---:|---:|"]
-    for name, entry in result["cases"].items():
-        l, r = entry["residual"]
-        rows.append(f"| {name} | {l['max_abs']:.6e} | {l['rms']:.6e} | {r['max_abs']:.6e} | {r['rms']:.6e} |")
-    (RESULTS / "residual-table.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
 
 
