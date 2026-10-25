@@ -1,7 +1,8 @@
 """Regenerate report evidence; paths are independent of the working directory."""
 
 import analyze
-import fig_consequences
+import fig_power
+import fig_peak
 import fig_identity
 import fig_matrix
 import fig_residual
@@ -15,7 +16,8 @@ def main():
         fig_matrix,
         fig_residual,
         fig_identity,
-        fig_consequences,
+        fig_power,
+        fig_peak,
     ):
         module.main()
 

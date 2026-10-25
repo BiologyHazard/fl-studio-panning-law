@@ -2,36 +2,34 @@
 
 正式报告：[FL Studio Panning Law](REPORT.md)。
 
-本项目研究 Mixer Master 与 Audio Clip Channel panning 在 Circular / Triangular 设置下的双声道变换。实验使用的软件版本为 FL Studio 20.8.3.2304；每种条件使用同一份左声道单位直流输入，进行 8 秒的全范围声像扫描。
-
-代码仓库：[BiologyHazard/fl-studio-panning-law](https://github.com/BiologyHazard/fl-studio-panning-law)。
+本项目研究 Mixer 与 Audio Clip Channel panning 在 Circular / Triangular 设置下的双声道变换。实验使用的软件版本为 FL Studio 20.8.3.2304；每种条件使用同一份左声道单位直流输入，进行 8 秒的全范围声像扫描。
 
 ## 目录
 
-| 路径                                           | 用途                                                           |
-| ---------------------------------------------- | -------------------------------------------------------------- |
-| `REPORT.md`                                    | 正式报告：公式总览、官方文档摘录、实验与导出设置、数据验证及结论 |
-| `fl-studio-projects/`                          | 四个 FL Studio 实验工程                                        |
-| `input-wav-file/`                              | 左声道单位直流输入 WAV                                         |
-| `output-wav-files/`                            | 四种条件的原始输出 WAV                                         |
-| `images/*.png`                                 | 九张原始实验截图，均已嵌入报告                                 |
-| `images/figures/`                              | 五张程序生成的分析图，每图包含 PNG 与 SVG                      |
-| `results/statistics.json`                      | 全精度残差、输出极值、原始文件 SHA-256           |
-| `scripts/`                                     | 数据分析、单图绘制及输入生成代码                               |
-| `pyproject.toml`、`uv.lock`、`.python-version` | Python 环境与锁定依赖                                          |
+| 路径                                           | 用途                                   |
+| ---------------------------------------------- | -------------------------------------- |
+| `REPORT.md`                                    | 正式报告                               |
+| `fl-studio-projects/`                          | FL Studio 实验工程                     |
+| `input-wav-file/`                              | 左声道单位直流输入 WAV                 |
+| `output-wav-files/`                            | 4 种条件的原始输出 WAV                 |
+| `images/*.png`                                 | 软件截图                               |
+| `images/figures/`                              | 程序生成的分析图表                     |
+| `results/statistics.json`                      | 全精度残差、输出极值、原始文件 SHA-256 |
+| `scripts/`                                     | 数据分析、单图绘制及生成输入文件的代码 |
+| `pyproject.toml`、`uv.lock`、`.python-version` | Python 环境与锁定依赖                  |
 
-原始 WAV、FLP 和截图属于实验资料。`images/figures/` 与 `results/statistics.json` 是可由脚本重新生成的研究产物；保留它们便于直接阅读报告、复核数字及核对数据版本。`.venv/` 是本地 Python 环境，隐藏工具配置目录独立于研究资料。
+原始 WAV、FLP 和截图属于实验资料。`images/figures/` 与 `results/statistics.json` 是可由脚本重新生成的研究产物；保留它们便于直接阅读报告、复核数字及核对数据版本。
 
 ## 完整复现
 
 在项目根目录运行：
 
-```powershell
+```sh
 uv sync
 uv run python scripts/build.py
 ```
 
-该命令读取原始 WAV，重算 `results/statistics.json`，并生成 `images/figures/` 下全部图件。各脚本按自身路径定位项目，亦可从其他工作目录以绝对路径调用。
+该命令读取原始 WAV，重算 `results/statistics.json`，并生成 `images/figures/` 下全部图表。
 
 ## 分析与单图入口
 
@@ -40,21 +38,20 @@ uv run python scripts/build.py
 | `scripts/build.py`                | 统一入口，运行统计与全部绘图               |
 | `scripts/analyze.py`              | 统计、输出关系检验、峰值解析量及文件哈希   |
 | `scripts/common.py`               | WAV 读取、声像坐标、矩阵模型与公共绘图样式 |
-| `scripts/fig_response.py`         | 报告图 10：实测响应与公式对比               |
+| `scripts/fig_response.py`         | 报告图 10：实测响应与公式对比              |
 | `scripts/fig_matrix.py`           | 报告图 11：四个矩阵系数                    |
 | `scripts/fig_residual.py`         | 报告图 12：全样本残差包络及局部波形        |
 | `scripts/fig_identity.py`         | 报告图 13：消去声像参数的输出关系          |
-| `scripts/fig_consequences.py`     | 报告图 14：功率关系与内部峰值              |
-| `scripts/make_left_channel_dc.py` | 生成单位左声道直流输入材料                 |
+| `scripts/fig_power.py`            | 报告图 14：两种输入条件下的功率关系        |
+| `scripts/fig_peak.py`             | 报告图 15：Mixer Circular 的内部幅度峰值   |
+| `scripts/make_left_channel_dc.py` | 生成单位左声道直流输入音频文件             |
 
 例如：
 
-```powershell
+```sh
 uv run python scripts/analyze.py
 uv run python scripts/fig_response.py
 ```
-
-图中的显示抽样只影响绘图，所有统计和残差包络均使用完整数据。声像位置按采样时刻计算为 `p[n] = -1 + 2n/N`，末帧位于全右端点之前。`statistics.json` 中 `residual` 保存左右声道各自的最大绝对残差与 RMS。残差图的局部窗口为末尾 100 ms（7.9–8.0 s，右端点不包含在采样中）。
 
 ## 重新生成输入
 

@@ -2,71 +2,67 @@
 
 ## 先说结论
 
-FL Studio 20.8.3.2304 
-
-令 $p\in[-1,1]$ 为声像位置，$-1$、$0$、$1$ 分别表示全左、居中、全右；$x_{\text{L}},x_{\text{R}}$ 为同一时刻的左右输入样本，$y_{\text{L}},y_{\text{R}}$ 为左右输出样本。声像变换由增益矩阵 $A(p)$ 表示：
+令 $p\in[-1,1]$ 为声像位置，$-1$、$0$、$1$ 分别表示极左、居中、极右；$x_{\text{L}},x_{\text{R}}$ 为同一时刻的左右输入样本，$y_{\text{L}},y_{\text{R}}$ 为左右输出样本。声像变换由增益矩阵 $A(p)$ 表示：
 
 $$
 \begin{bmatrix}y_{\text{L}}\\y_{\text{R}}\end{bmatrix}
 =A(p)\begin{bmatrix}x_{\text{L}}\\x_{\text{R}}\end{bmatrix}.
 $$
 
-先按项目的 Panning law 设置计算辅助增益 $u(p)$、$v(p)$：
+先按项目的 Panning law 设置计算辅助增益 $u(p)$、$v(p)$。
 
-**Circular：** 令角变量 $\theta=\pi(p+1)/4$，取
-
-$$
-u(p)=\sqrt2\cos\theta,\qquad v(p)=\sqrt2\sin\theta.
-$$
-
-**Triangular：** 取
+**Circular：** 令 $\theta=\pi(p+1)/4$，辅助增益为
 
 $$
-u(p)=1-\max(p,0),\qquad v(p)=1+\min(p,0).
+u_{\text{Circ}}(p)=\sqrt2\cos\theta,\qquad
+v_{\text{Circ}}(p)=\sqrt2\sin\theta.
 $$
 
-再按控制位置选择以下矩阵，其中 $u,v$ 均表示在当前声像位置 $p$ 处的取值。
+**Triangular：** 辅助增益为
+
+$$
+u_{\text{Tri}}(p)=1-\max(p,0),\qquad
+v_{\text{Tri}}(p)=1+\min(p,0).
+$$
+
+用下标 $\ell\in\{\text{Circ},\text{Tri}\}$ 表示项目的声像法则，矩阵中的 $u_\ell,v_\ell$ 均在当前 $p$ 处取值。按控制位置选择：
 
 **Mixer：**
 
 $$
-A_{\text{Mixer}}(p)=
+A_{\text{Mixer},\ell}(p)=
 \begin{cases}
 \begin{bmatrix}
-u(1+v)/2&u(1-v)/2\\
-0&v
+u_\ell(1+v_\ell)/2&u_\ell(1-v_\ell)/2\\
+0&v_\ell
 \end{bmatrix},&-1\le p\le0,\\[10pt]
 \begin{bmatrix}
-u&0\\
-v(1-u)/2&v(1+u)/2
+u_\ell&0\\
+v_\ell(1-u_\ell)/2&v_\ell(1+u_\ell)/2
 \end{bmatrix},&0<p\le1.
 \end{cases}
-\tag{1}
 $$
 
 **Audio Clip：**
 
 $$
-A_{\text{Clip}}(p)=
-\begin{bmatrix}u&0\\0&v\end{bmatrix},
+A_{\text{Clip},\ell}(p)=
+\begin{bmatrix}u_\ell&0\\0&v_\ell\end{bmatrix},
 \qquad -1\le p\le1.
-\tag{2}
 $$
 
-| 情形                  | 辅助增益            | 变换矩阵           |
-| --------------------- | ------------------- | ------------------ |
-| Mixer Circular        | Circular 的 $u,v$   | $A_{\text{Mixer}}$ |
-| Mixer Triangular      | Triangular 的 $u,v$ | $A_{\text{Mixer}}$ |
-| Audio Clip Circular   | Circular 的 $u,v$   | $A_{\text{Clip}}$  |
-| Audio Clip Triangular | Triangular 的 $u,v$ | $A_{\text{Clip}}$  |
+| 情形                  | 辅助增益                          | 变换矩阵                       |
+| --------------------- | --------------------------------- | ------------------------------ |
+| Mixer Circular        | $u_{\text{Circ}},v_{\text{Circ}}$ | $A_{\text{Mixer},\text{Circ}}$ |
+| Mixer Triangular      | $u_{\text{Tri}},v_{\text{Tri}}$   | $A_{\text{Mixer},\text{Tri}}$  |
+| Audio Clip Circular   | $u_{\text{Circ}},v_{\text{Circ}}$ | $A_{\text{Clip},\text{Circ}}$  |
+| Audio Clip Triangular | $u_{\text{Tri}},v_{\text{Tri}}$   | $A_{\text{Clip},\text{Tri}}$   |
 
 Mixer 将另一侧输入混入声像偏转侧；Audio Clip 分别调整左右增益。两类控制在居中处都保持输入。下文给出实验方法、测量结果及误差分析。
 
 ## 摘要
 
-本研究通过左声道单位直流激励，测量 FL Studio 中 Mixer 与 Audio Clip 两类声像控制在 Circular 和 Triangular 设置下的双声道变换。研究采用无记忆性、线性性和左右交换对称性三个假设，利用全范围声像扫描辨识变换矩阵。四份实验音频均为 48 kHz、32 位浮点、8 s 双声道文件。结果表明，Audio Clip 对左右声道分别施加增益；Mixer 则在增益调整的同时，将另一侧输入混入声像偏转侧。本文以两组辅助增益函数和两类变换矩阵统一表示四种情形的声像法则。按采样时间建立名义线性扫描轨迹后，各输出的最大绝对残差均低于 $6.1\times10^{-5}$；消去声像参数后的 Mixer 左右输出关系残差低于 $8.5\times10^{-6}$。由所获公式进一步得到极端声像处的求和关系、同相双声道输入的功率规律，以及 Mixer Circular 在单侧输入下约 $+0.423\,\text{dB}$ 的内部幅度峰值。
-
-**关键词：** FL Studio；panning law；声像法则；双声道变换；增益矩阵；直流测量
+FL Studio 官方文档说明了 Circular 与 Triangular 的电平补偿特征及 Mixer 的声道混合行为，但未给出完整的声像变换公式。本研究以左声道单位直流信号为输入，在 FL Studio 20.8.3.2304 中对 Mixer 和 Audio Clip 两类控制进行极左至极右的线性扫描，通过分析导出的双声道音频辨识四种情形的增益矩阵。结果表明，Mixer 包含向声像偏转侧的交叉混合，Audio Clip 则分别调整左右声道增益；两种声像法则可由不同的辅助增益函数统一表示。解析公式与导出音频的逐样本最大绝对残差低于 $6.1\times10^{-5}$，消去声像参数后的 Mixer 输出关系残差低于 $8.5\times10^{-6}$。所得公式给出了 Mixer 在极左、极右位置的求和比例，并解释了同相同幅双声道输入下 Circular 的等功率性质，以及 Mixer Circular 对单侧输入产生的约 $+0.423\,\text{dB}$ 内部幅度峰值。
 
 ## 1. 官方说明与研究问题
 
@@ -76,17 +72,17 @@ FL Studio 官方手册在 *Project General Settings* 的 “Panning law” 条�
 
 > “Circular - Level compensation is applied when panning (orange). Level drops 3 dB at center pan.”
 
-即 Circular 在声像变化时施加电平补偿，中心位置的电平比极端位置低约 3 dB。
+即 Circular 在声像变化时施加电平补偿，居中位置的电平比极端位置低约 $3\,\text{dB}$。
 
 > “Triangular - No level compensation is used as a function of pan position (green).”
 
-即 Triangular 不随声像位置施加上述电平补偿。该条目还说明，其整体电平相对于 Circular 极端声像位置低约 3 dB。
+即 Triangular 不随声像位置施加上述电平补偿。该条目还说明，其整体电平相对于 Circular 极端声像位置低约 $3\,\text{dB}$。
 
 手册随后专门说明了 Audio Clip 的电平基准 [1]：
 
 > “in this case volume is being added at extremes instead of subtracted at the center position.”
 
-即在这里，补偿体现为提高两端的电平。结合该段上下文：在默认 Channel Sampler 设置下，Audio Clip 的电平读数与录制电平相同，使用 Circular 时最多可以增加约 3 dB。因此，中心与两端的相对差异，需要结合实际信号路径的电平基准理解。
+即在这里，补偿体现为提高两端的电平。结合该段上下文：在默认 Channel Sampler 设置下，Audio Clip 的电平读数与录制电平相同，使用 Circular 时最多可以增加约 $3\,\text{dB}$。因此，中心与两端的相对差异，需要结合实际信号路径的电平基准理解。
 
 关于 Mixer 的声像控制，官方 *Mixer* 页面写道 [2]：
 
@@ -119,19 +115,19 @@ FL Studio 官方手册在 *Project General Settings* 的 “Panning law” 条�
 
 | 符号                                  | 定义                                                     |
 | ------------------------------------- | -------------------------------------------------------- |
-| $n$                                   | 从 0 开始的采样帧序号，$n=0,\ldots,N-1$                  |
+| $n$                                   | 从 $0$ 开始的采样帧序号，$n=0,\ldots,N-1$                |
 | $N$                                   | 音频的总帧数                                             |
 | $f_s$                                 | 采样率，单位 Hz                                          |
 | $t_n=n/f_s$                           | 第 $n$ 帧对应的时间，单位 s                              |
 | $x_{\text{L}}[n],x_{\text{R}}[n]$     | 第 $n$ 帧进入声像变换的左、右声道输入样本值              |
 | $y_{\text{L}}[n],y_{\text{R}}[n]$     | 第 $n$ 帧经过声像变换的左、右声道输出样本值              |
 | $\boldsymbol{x}[n],\boldsymbol{y}[n]$ | 将左右样本排列为列向量的输入、输出                       |
-| $p$                                   | 归一化声像位置；$-1$ 为全左，$0$ 为居中，$1$ 为全右      |
+| $p$                                   | 归一化声像位置；$-1$ 为极左，$0$ 为居中，$1$ 为极右      |
 | $p[n]$                                | 第 $n$ 帧采用的声像位置                                  |
 | $A(p)$                                | 声像位置为 $p$ 时的 $2\times2$ 实数增益矩阵              |
 | $A_{ij}(p)$                           | 从输入声道 $j$ 到输出声道 $i$ 的增益；1 表示左，2 表示右 |
 
-上述样本值是数字音频幅度，本文以数值 1 为幅度参考。上标 $\top$ 表示转置，例如 $(1,0)^\top$ 表示由 1 和 0 组成的列向量。输入和输出向量具体写为
+上述样本值是数字音频幅度，本文以数值 $1$ 为幅度参考。上标 $\top$ 表示转置，例如 $(1,0)^\top$ 表示由 $1$ 和 $0$ 组成的列向量。输入和输出向量具体写为
 
 $$
 \boldsymbol{x}[n]=
@@ -200,16 +196,16 @@ A(p)=
 f(p)&h(-p)\\
 h(p)&f(-p)
 \end{bmatrix}.
-\tag{3}
+\tag{1}
 $$
 
-因此，将同一左声道直流信号从全左扫描到全右，便可得到完整双声道变换所需的信息。
+因此，将同一左声道直流信号从极左扫描到极右，便可得到完整双声道变换所需的信息。
 
 ## 3. 实验设计
 
 ### 3.1 输入材料与控制位置
 
-输入为双声道直流信号：左声道在全部帧上等于 1，右声道在全部帧上等于 0。图 2 展示该信号在音频编辑器中的波形。
+输入为双声道直流信号：左声道在全部帧上等于 $1$，右声道在全部帧上等于 $0$。图 2 展示该信号在音频编辑器中的波形。
 
 ![左声道单位直流输入](<images/Left Channel DC.png>)
 
@@ -233,7 +229,7 @@ Mixer 条件对 Master 轨道的 Panning 控件施加自动化，图 3 的自动
 | 采样率 $f_s$   | $48000\,\text{Hz}$           |
 | 帧数 $N$       | $384000$                     |
 | 时长 $T=N/f_s$ | $8\,\text{s}$                |
-| 声像扫描       | 从全左到全右的线性自动化     |
+| 声像扫描       | 从极左到极右的线性自动化     |
 | 实验组合       | 两类控制位置 × 两种声像法则  |
 | 输出文件       | 每种组合一份，共四份         |
 
@@ -245,20 +241,20 @@ Mixer 条件对 Master 轨道的 Panning 控件施加自动化，图 3 的自动
 
 **图 5. 音频导出设置。** 图示以 Audio Clip Circular 为例。导出范围为 4 小节、8 s，输出为双声道 32 位浮点 WAV。
 
-| 导出选项                                      | 设置                        |
-| --------------------------------------------- | --------------------------- |
-| Mode                                          | Full song                   |
-| Tail                                          | Cut remainder               |
-| 输出格式                                      | WAV                         |
-| WAV bit depth                                 | 32Bit float                 |
-| 声道模式                                      | Stereo                      |
-| Resampling                                    | 128-point sinc              |
-| HQ for all plugins                            | 开启                        |
-| Disable maximum polyphony                     | 开启                        |
-| Dithering                                     | 关闭，32 位浮点模式下不可选 |
-| Split mixer tracks                            | 关闭                        |
-| Trim PDC silence                              | 关闭                        |
-| Enable insert effects / Enable master effects | 开启                        |
+| 导出选项                                      | 设置                          |
+| --------------------------------------------- | ----------------------------- |
+| Mode                                          | Full song                     |
+| Tail                                          | Cut remainder                 |
+| 输出格式                                      | WAV                           |
+| WAV bit depth                                 | 32Bit float                   |
+| 声道模式                                      | Stereo                        |
+| Resampling                                    | 128-point sinc                |
+| HQ for all plugins                            | 开启                          |
+| Disable maximum polyphony                     | 开启                          |
+| Dithering                                     | 关闭，$32$ 位浮点模式下不可选 |
+| Split mixer tracks                            | 关闭                          |
+| Trim PDC silence                              | 关闭                          |
+| Enable insert effects / Enable master effects | 开启                          |
 
 为将样本序号转换为声像坐标，定义第 $n$ 帧的**名义声像位置** $\bar p_n$：
 
@@ -267,13 +263,13 @@ $$
 =-1+\frac{2n}{N},\qquad n=0,\ldots,N-1.
 $$
 
-其中横线表示由实验时间轴指定的参数值。$n=192000$ 对应居中；最后一帧对应 $\bar p_{N-1}=1-2/N\approx0.999994792$。全右位置 $p=1$ 对应 $t=T=8\,\text{s}$，而末帧位于 $t_{N-1}=T-1/f_s$，因此音频样本不包含全右位置。
+其中横线表示由实验时间轴指定的参数值。$n=192000$ 对应居中；最后一帧对应 $\bar p_{N-1}=1-2/N\approx0.999994792$。极右位置 $p=1$ 对应 $t=T=8\,\text{s}$，而末帧位于 $t_{N-1}=T-1/f_s$，因此音频样本不包含极右位置。
 
 ## 4. 声像法则的辨识与实测响应
 
-本节分别展开四种情形的增益函数、左声道激励响应及完整变换矩阵。仍记 $f(p)$ 为左输入到左输出的增益，$h(p)$ 为左输入到右输出的增益。输入为 $(1,0)^\top$ 时，这两条曲线分别对应实测左右输出；再利用左右交换关系，按式（3）构造完整矩阵。
+本节分别展开四种情形的增益函数、左声道激励响应及完整变换矩阵。仍记 $f(p)$ 为左输入到左输出的增益，$h(p)$ 为左输入到右输出的增益。输入为 $(1,0)^\top$ 时，这两条曲线分别对应实测左右输出；再利用左右交换关系，按式 (1) 构造完整矩阵。
 
-为区分两种声像法则，以下将 Circular 的辅助增益记为 $u_{\text{C}}(p),v_{\text{C}}(p)$，将 Triangular 的辅助增益记为 $u_{\text{T}}(p),v_{\text{T}}(p)$。矩阵内省略自变量 $p$。各图上半部分为左声道，下半部分为右声道；横轴为时间，纵轴采用音频编辑器的 dB 显示。
+为区分两种声像法则，以下将 Circular 的辅助增益记为 $u_{\text{Circ}}(p),v_{\text{Circ}}(p)$，将 Triangular 的辅助增益记为 $u_{\text{Tri}}(p),v_{\text{Tri}}(p)$。矩阵内省略自变量 $p$。各图上半部分为左声道，下半部分为右声道；横轴为时间，纵轴采用音频编辑器的 dB 显示。
 
 ### 4.1 Mixer × Circular
 
@@ -281,74 +277,74 @@ $$
 
 $$
 \theta=\frac{\pi(p+1)}4,\qquad
-u_{\text{C}}(p)=\sqrt2\cos\theta,\qquad
-v_{\text{C}}(p)=\sqrt2\sin\theta.
+u_{\text{Circ}}(p)=\sqrt2\cos\theta,\qquad
+v_{\text{Circ}}(p)=\sqrt2\sin\theta.
 $$
 
-其中 $\theta$ 将全左至全右的声像范围映射到 $[0,\pi/2]$。两条增益函数满足 $v_{\text{C}}(p)=u_{\text{C}}(-p)$、$u_{\text{C}}^2+v_{\text{C}}^2=2$，且在居中处均为 1。
+其中 $\theta$ 将极左至极右的声像范围映射到 $[0,\pi/2]$。两条增益函数满足 $v_{\text{Circ}}(p)=u_{\text{Circ}}(-p)$、$u_{\text{Circ}}^2+v_{\text{Circ}}^2=2$，且在居中处均为 $1$。
 
 对单位左输入，实测响应可用以下分段函数描述：
 
 $$
 f(p)=
 \begin{cases}
-u_{\text{C}}(1+v_{\text{C}})/2,&-1\le p\le0,\\
-u_{\text{C}},&0<p\le1,
+u_{\text{Circ}}(1+v_{\text{Circ}})/2,&-1\le p\le0,\\
+u_{\text{Circ}},&0<p\le1,
 \end{cases}
 \qquad
 h(p)=
 \begin{cases}
 0,&-1\le p\le0,\\
-v_{\text{C}}(1-u_{\text{C}})/2,&0<p\le1.
+v_{\text{Circ}}(1-u_{\text{Circ}})/2,&0<p\le1.
 \end{cases}
 $$
 
-左偏区间的右输出为零；右偏区间的右输出随左声道衰减而增加。将这两条函数代入左右交换关系，得到完整矩阵
+左偏区间的右输出为 $0$；右偏区间的右输出随左声道衰减而增加。将这两条函数代入左右交换关系，得到完整矩阵
 
 $$
 A_{\text{Mixer,Circ}}(p)=
 \begin{cases}
 \begin{bmatrix}
-u_{\text{C}}(1+v_{\text{C}})/2&
-u_{\text{C}}(1-v_{\text{C}})/2\\
-0&v_{\text{C}}
+u_{\text{Circ}}(1+v_{\text{Circ}})/2&
+u_{\text{Circ}}(1-v_{\text{Circ}})/2\\
+0&v_{\text{Circ}}
 \end{bmatrix},&-1\le p\le0,\\[10pt]
 \begin{bmatrix}
-u_{\text{C}}&0\\
-v_{\text{C}}(1-u_{\text{C}})/2&
-v_{\text{C}}(1+u_{\text{C}})/2
+u_{\text{Circ}}&0\\
+v_{\text{Circ}}(1-u_{\text{Circ}})/2&
+v_{\text{Circ}}(1+u_{\text{Circ}})/2
 \end{bmatrix},&0<p\le1.
 \end{cases}
-\tag{4}
+\tag{2}
 $$
 
 以左偏区间为例，左右输出分别为
 
 $$
 y_{\text{L}}=
-u_{\text{C}}\left(
-\frac{1+v_{\text{C}}}{2}x_{\text{L}}
-+\frac{1-v_{\text{C}}}{2}x_{\text{R}}
+u_{\text{Circ}}\left(
+\frac{1+v_{\text{Circ}}}{2}x_{\text{L}}
++\frac{1-v_{\text{Circ}}}{2}x_{\text{R}}
 \right),\qquad
-y_{\text{R}}=v_{\text{C}}x_{\text{R}}.
+y_{\text{R}}=v_{\text{Circ}}x_{\text{R}}.
 $$
 
-左输出括号内的两项权重之和为 1：居中时 $v_{\text{C}}=1$，权重为 $(1,0)$；全左时 $v_{\text{C}}=0$，权重为 $(1/2,1/2)$。与此同时，外部增益 $u_{\text{C}}$ 从 1 增至 $\sqrt2$。因此，偏转过程同时改变左右输入的混合比例及混合后的增益。对于本实验的单侧输入，这两种变化共同产生左偏区间的内部幅度峰值，其位置与幅度在第 6.3 节求得。
+左输出括号内的两项权重之和为 $1$：居中时 $v_{\text{Circ}}=1$，权重为 $(1,0)$；极左时 $v_{\text{Circ}}=0$，权重为 $(1/2,1/2)$。与此同时，外部增益 $u_{\text{Circ}}$ 从 $1$ 增至 $\sqrt2$。因此，偏转过程同时改变左右输入的混合比例及混合后的增益。对于本实验的单侧输入，这两种变化共同产生左偏区间的内部幅度峰值，其位置与幅度在第 6.3 节求得。
 
 ![Mixer Circular 原始输出](<images/Mixer Circular Panning.png>)
 
-**图 6. Mixer Circular 的输出波形。** 左输出先升后降，在居中之前略高于单位幅度；右输出从扫描中点之后增加，接近全右时约为 −3 dB。
+**图 6. Mixer Circular 的输出波形。** 左输出先升后降，在居中之前略高于单位幅度；右输出从扫描中点之后增加，接近极右时约为 $-3\,\text{dB}$。
 
 ### 4.2 Mixer × Triangular
 
 Triangular 的辅助增益为
 
 $$
-u_{\text{T}}(p)=1-\max(p,0),\qquad
-v_{\text{T}}(p)=1+\min(p,0).
+u_{\text{Tri}}(p)=1-\max(p,0),\qquad
+v_{\text{Tri}}(p)=1+\min(p,0).
 $$
 
-左偏时 $u_{\text{T}}=1$、$v_{\text{T}}=1+p$；右偏时 $u_{\text{T}}=1-p$、$v_{\text{T}}=1$。对单位左输入，实测响应对应
+左偏时 $u_{\text{Tri}}=1$、$v_{\text{Tri}}=1+p$；右偏时 $u_{\text{Tri}}=1-p$、$v_{\text{Tri}}=1$。对单位左输入，实测响应对应
 
 $$
 f(p)=
@@ -370,20 +366,20 @@ $$
 A_{\text{Mixer,Tri}}(p)=
 \begin{cases}
 \begin{bmatrix}
-u_{\text{T}}(1+v_{\text{T}})/2&
-u_{\text{T}}(1-v_{\text{T}})/2\\
-0&v_{\text{T}}
+u_{\text{Tri}}(1+v_{\text{Tri}})/2&
+u_{\text{Tri}}(1-v_{\text{Tri}})/2\\
+0&v_{\text{Tri}}
 \end{bmatrix},&-1\le p\le0,\\[10pt]
 \begin{bmatrix}
-u_{\text{T}}&0\\
-v_{\text{T}}(1-u_{\text{T}})/2&
-v_{\text{T}}(1+u_{\text{T}})/2
+u_{\text{Tri}}&0\\
+v_{\text{Tri}}(1-u_{\text{Tri}})/2&
+v_{\text{Tri}}(1+u_{\text{Tri}})/2
 \end{bmatrix},&0<p\le1.
 \end{cases}
-\tag{5}
+\tag{3}
 $$
 
-这一混合结构与 Mixer Circular 相同，差别在于辅助增益的变化规律。代入 $u_{\text{T}},v_{\text{T}}$ 后，输出关系可进一步写为
+这一混合结构与 Mixer Circular 相同，差别在于辅助增益的变化规律。代入 $u_{\text{Tri}},v_{\text{Tri}}$ 后，输出关系可进一步写为
 
 $$
 \begin{aligned}
@@ -396,11 +392,11 @@ y_{\text{R}}&=(p/2)x_{\text{L}}+(1-p/2)x_{\text{R}}.
 \end{aligned}
 $$
 
-所有系数均为分段线性函数。左偏时，左输入的同侧系数从全左的 $1/2$ 增至居中的 1；右偏时，该系数降至零，同时左输入到右输出的系数增至 $1/2$。
+所有系数均为分段线性函数。左偏时，左输入的同侧系数从极左的 $1/2$ 增至居中的 $1$；右偏时，该系数降至零，同时左输入到右输出的系数增至 $1/2$。
 
 ![Mixer Triangular 原始输出](<images/Mixer Triangular Panning.png>)
 
-**图 7. Mixer Triangular 的输出波形。** 左输出从约 −6 dB 增至居中的 0 dB，再下降；右输出在右半段增加，末端接近 −6 dB。
+**图 7. Mixer Triangular 的输出波形。** 左输出从约 $-6\,\text{dB}$ 增至居中的 $0\,\text{dB}$，再下降；右输出在右半段增加，末端接近 $-6\,\text{dB}$。
 
 ### 4.3 Audio Clip × Circular
 
@@ -408,87 +404,87 @@ $$
 
 $$
 \theta=\frac{\pi(p+1)}4,\qquad
-u_{\text{C}}(p)=\sqrt2\cos\theta,\qquad
-v_{\text{C}}(p)=\sqrt2\sin\theta.
+u_{\text{Circ}}(p)=\sqrt2\cos\theta,\qquad
+v_{\text{Circ}}(p)=\sqrt2\sin\theta.
 $$
 
-本实验中，右输出在全部帧上均为数值零，左输出与 $u_{\text{C}}(p)$ 对应。因此，左声道激励辨识得到的两条响应为
+本实验中，右输出在全部帧上均为数值零，左输出与 $u_{\text{Circ}}(p)$ 对应。因此，左声道激励辨识得到的两条响应为
 
 $$
-f(p)=u_{\text{C}}(p),\qquad h(p)=0.
+f(p)=u_{\text{Circ}}(p),\qquad h(p)=0.
 $$
 
-由 $u_{\text{C}}(-p)=v_{\text{C}}(p)$，完整矩阵为
+由 $u_{\text{Circ}}(-p)=v_{\text{Circ}}(p)$，完整矩阵为
 
 $$
 A_{\text{Clip,Circ}}(p)=
 \begin{bmatrix}
-u_{\text{C}}&0\\
-0&v_{\text{C}}
+u_{\text{Circ}}&0\\
+0&v_{\text{Circ}}
 \end{bmatrix},
 \qquad -1\le p\le1.
-\tag{6}
+\tag{4}
 $$
 
 这给出逐声道的增益关系
 
 $$
-y_{\text{L}}=u_{\text{C}}x_{\text{L}},\qquad
-y_{\text{R}}=v_{\text{C}}x_{\text{R}}.
+y_{\text{L}}=u_{\text{Circ}}x_{\text{L}},\qquad
+y_{\text{R}}=v_{\text{Circ}}x_{\text{R}}.
 $$
 
-左声道输入在全左处获得 $\sqrt2$ 倍增益，在居中处获得单位增益，在全右处降为零。与 Mixer Circular 相比，Audio Clip 的同侧增益直接采用 $u_{\text{C}},v_{\text{C}}$，矩阵的交叉项为零；因而本实验中的左输入始终只出现在左输出。
+左声道输入在极左处获得 $\sqrt2$ 倍增益，在居中处获得单位增益，在极右处降为零。与 Mixer Circular 相比，Audio Clip 的同侧增益直接采用 $u_{\text{Circ}},v_{\text{Circ}}$，矩阵的交叉项为零；因而本实验中的左输入始终只出现在左输出。
 
 ![Audio Clip Circular 原始输出](<images/Audio Clip Circular Panning.png>)
 
-**图 8. Audio Clip Circular 的输出波形。** 左输出从约 +3 dB 逐渐下降，右输出保持为零。
+**图 8. Audio Clip Circular 的输出波形。** 左输出从约 $+3\,\text{dB}$ 逐渐下降，右输出保持为零。
 
 ### 4.4 Audio Clip × Triangular
 
 采用 Triangular 增益
 
 $$
-u_{\text{T}}(p)=1-\max(p,0),\qquad
-v_{\text{T}}(p)=1+\min(p,0).
+u_{\text{Tri}}(p)=1-\max(p,0),\qquad
+v_{\text{Tri}}(p)=1+\min(p,0).
 $$
 
 实测左输出在左半区保持单位幅度，在右半区线性下降；右输出在全部帧上均为数值零。因此，
 
 $$
-f(p)=u_{\text{T}}(p),\qquad h(p)=0.
+f(p)=u_{\text{Tri}}(p),\qquad h(p)=0.
 $$
 
-利用 $u_{\text{T}}(-p)=v_{\text{T}}(p)$，得到
+利用 $u_{\text{Tri}}(-p)=v_{\text{Tri}}(p)$，得到
 
 $$
 A_{\text{Clip,Tri}}(p)=
 \begin{bmatrix}
-u_{\text{T}}&0\\
-0&v_{\text{T}}
+u_{\text{Tri}}&0\\
+0&v_{\text{Tri}}
 \end{bmatrix},
 \qquad -1\le p\le1.
-\tag{7}
+\tag{5}
 $$
 
 具体而言，左偏时输出为 $y_{\text{L}}=x_{\text{L}}$、$y_{\text{R}}=(1+p)x_{\text{R}}$；右偏时输出为 $y_{\text{L}}=(1-p)x_{\text{L}}$、$y_{\text{R}}=x_{\text{R}}$。偏转侧保持单位增益，另一侧随声像位置线性衰减。它与 Audio Clip Circular 共享对角矩阵结构，采用的是分段线性增益函数。
 
 ![Audio Clip Triangular 原始输出](<images/Audio Clip Triangular Panning.png>)
 
-**图 9. Audio Clip Triangular 的输出波形。** 左输出在前半段保持 0 dB，后半段下降；右输出保持为零。
+**图 9. Audio Clip Triangular 的输出波形。** 左输出在前半段保持 $0\,\text{dB}$，后半段下降；右输出保持为零。
 
 ### 4.5 响应对比与结构总结
 
-式（4）、（5）具有相同的分段混合结构，式（6）、（7）具有相同的对角结构。因此，四种结果可归纳为开头的 Mixer 矩阵式（1）与 Audio Clip 矩阵式（2），并通过选择两组辅助增益区分 Circular 和 Triangular。
+式 (2)、(3) 具有相同的分段混合结构，式 (4)、(5) 具有相同的对角结构。两类控制的差异由矩阵结构体现，Circular 与 Triangular 的差异则由各自的辅助增益函数体现。
 
 ![四种声像法则的实测响应与解析公式](images/figures/01-response.png)
 
-**图 10. 单位左声道输入的输出响应。** 蓝色和橙色分别表示左、右输出；实线为式（4）—（7）的计算结果，空心符号为均匀选取的 61 个实测样本。横坐标为名义声像位置。原始输出波形见图 6—9。
+**图 10. 单位左声道输入的输出响应。** 蓝色和橙色分别表示左、右输出；实线为式 (2)—(5) 的计算结果，空心符号为均匀选取的 61 个实测样本。横坐标为名义声像位置。原始输出波形见图 6—9。
 
 两份 Audio Clip 输出的右声道在全部帧上均为数值零；两份 Mixer 输出的右声道在右半段出现信号。两类控制的核心区别是：**Audio Clip 分别调整两侧增益，Mixer 将另一侧输入混入声像偏转侧。**
 
 ![四种声像法则的矩阵系数](images/figures/02-matrix.png)
 
-**图 11. 完整矩阵的四个系数。** 实线为通过左声道激励辨识的第一列，虚线为按式（3）补全的第二列。蓝色表示同侧增益，橙色表示交叉混合增益；部分零系数曲线重合。
+**图 11. 完整矩阵的四个系数。** 实线为通过左声道激励辨识的第一列，虚线为按式 (1) 补全的第二列。蓝色表示同侧增益，橙色表示交叉混合增益；部分零系数曲线重合。
 
 四种情形均在居中处满足 $A(0)=I$，其中 $I$ 为 $2\times2$ 单位矩阵。因此，居中时输出逐声道等于输入。
 
@@ -531,14 +527,14 @@ $$
 
 对于 Mixer 的右偏区间，可以消去 $p$，直接检验同一帧左右输出之间的关系。这样，公式的检验只需使用输出幅度。
 
-对 Mixer Circular，式（4）给出
+对 Mixer Circular，式 (2) 给出
 
 $$
 \hat y_{\text{R}}=
 \frac{(1-y_{\text{L}})\sqrt{2-y_{\text{L}}^2}}2.
 $$
 
-对 Mixer Triangular，式（5）给出
+对 Mixer Triangular，式 (3) 给出
 
 $$
 \hat y_{\text{R}}=\frac{1-y_{\text{L}}}{2}.
@@ -573,7 +569,7 @@ A_{\text{Mixer}}(-1)=\frac{k}{2}
 \qquad
 A_{\text{Mixer}}(1)=\frac{k}{2}
 \begin{bmatrix}0&0\\1&1\end{bmatrix},
-\tag{8}
+\tag{6}
 $$
 
 $$
@@ -632,16 +628,20 @@ $$
 $$
 \frac{Q_y}{Q_x}=
 \frac{1+(1-|p|)^2}{2},\qquad s\ne0,
-\tag{9}
+\tag{7}
 $$
 
-从中心的 1 降至端点的 $1/2$。
+从居中时的 $1$ 降至端点的 $1/2$。
 
 对单侧输入 $(1,0)^\top$，输出平方和为 $f(p)^2+h(p)^2$，随声像位置变化，如图 14(b)。对于一般双声道输入，Mixer 的交叉混合还使输出功率依赖左右输入的相关性。
 
+![两种输入条件下的功率关系](images/figures/05-power.png)
+
+**图 14. 由声像公式计算的功率关系。** (a) 同相同幅双声道输入的输出／输入平方和之比；(b) 单位左输入的输出平方和。
+
 ### 6.3 Mixer Circular 的内部幅度峰值
 
-对单位左输入，在 $p\in[-1,0]$ 区间定义角变量 $\theta=\pi(p+1)/4$，因此 $\theta\in[0,\pi/4]$。由式（4），左输出可写为
+对单位左输入，在 $p\in[-1,0]$ 区间定义角变量 $\theta=\pi(p+1)/4$，因此 $\theta\in[0,\pi/4]$。由式 (2)，左输出可写为
 
 $$
 f(\theta)=\frac{\sqrt2\cos\theta+\sin2\theta}{2}.
@@ -673,31 +673,31 @@ f_{\max}=\frac{\sqrt{142+34\sqrt{17}}}{16}
 20\log_{10}f_{\max}\approx0.422949\,\text{dB}.
 $$
 
-实测 Mixer Circular 左输出最大值为 $1.049898863$，与解析峰值相差约 $7.443\times10^{-8}$。该峰值位于全左与居中之间，构成这一组合的局部电平凸起。
+实测 Mixer Circular 左输出最大值为 $1.049898863$，与解析峰值相差约 $7.443\times10^{-8}$。该峰值位于极左与居中之间，构成这一组合的局部电平凸起。
 
-Audio Clip Circular 的最大左声道增益位于全左端点，为 $\sqrt2$，对应 $+3.010300\,\text{dB}$，与官方所述端点约增加 3 dB 一致。浮点音频可以保存这些超过单位幅度的样本；最终输出的削波情况取决于后续处理和编码范围。
+Audio Clip Circular 的最大左声道增益位于极左端点，为 $\sqrt2$，对应 $+3.010300\,\text{dB}$，与官方所述端点约增加 $3\,\text{dB}$ 一致。浮点音频可以保存这些超过单位幅度的样本；最终输出的削波情况取决于后续处理和编码范围。
 
-![功率关系与内部峰值](images/figures/05-consequences.png)
+![Mixer Circular 的内部幅度峰值](images/figures/06-peak.png)
 
-**图 14. 由声像公式计算的功率与峰值特征。** (a) 同相同幅双声道输入的输出／输入平方和之比；(b) 单位左输入的输出平方和；(c) Mixer Circular 左偏区间的幅度极大值。
+**图 15. Mixer Circular 的内部幅度峰值。** 曲线为单位左输入时左输出的幅度，标记点表示左偏区间的幅度极大值。
 
 ### 6.4 与官方说明的对应关系
 
-| 官方描述                           | 本研究给出的定量结果                                                                      |
-| ---------------------------------- | ----------------------------------------------------------------------------------------- |
-| Circular 中心与两端相差约 3 dB [1] | 同相同幅输入下，中心每侧增益为 1，端点活动声道增益为 $\sqrt2$，相差 $3.010300\,\text{dB}$ |
-| Audio Clip 在两端增加电平 [1]      | 式（6）在中心为单位增益，在活动侧端点为 $\sqrt2$ 倍增益                                   |
-| Triangular 使用无补偿模式 [1]      | 式（7）保持偏转侧单位增益，另一侧线性衰减；同相双声道输入的总功率按式（9）变化            |
-| Mixer 将一侧混入另一侧 [2]         | 式（4）、（5）的非对角元素给出交叉混合的具体系数                                          |
-| Mixer 全偏时为左右单声道求和 [2]   | 式（8）给出 Circular 的 $1/\sqrt2$ 与 Triangular 的 $1/2$ 求和比例                        |
+| 官方描述                                     | 本研究给出的定量结果                                                                        |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Circular 中心与两端相差约 $3\,\text{dB}$ [1] | 同相同幅输入下，中心每侧增益为 $1$，端点活动声道增益为 $\sqrt2$，相差 $3.010300\,\text{dB}$ |
+| Audio Clip 在两端增加电平 [1]                | 式 (4) 在中心为单位增益，在活动侧端点为 $\sqrt2$ 倍增益                                     |
+| Triangular 使用无补偿模式 [1]                | 式 (5) 保持偏转侧单位增益，另一侧线性衰减；同相双声道输入的总功率按式 (7) 变化              |
+| Mixer 将一侧混入另一侧 [2]                   | 式 (2)、(3) 的非对角元素给出交叉混合的具体系数                                              |
+| Mixer 全偏时为左右单声道求和 [2]             | 式 (6) 给出 Circular 的 $1/\sqrt2$ 与 Triangular 的 $1/2$ 求和比例                          |
 
 ## 7. 结论
 
-本实验得到了 FL Studio 20.8.3.2304 四种声像控制情形的完整双声道变换。将 Circular 或 Triangular 的辅助增益代入 Mixer 矩阵式（1）和 Audio Clip 矩阵式（2），即可得到四种情形的声像法则，并由左右输入计算左右输出。
+本实验得到了 FL Studio 20.8.3.2304 四种声像控制情形的完整双声道变换。Mixer Circular、Mixer Triangular、Audio Clip Circular 和 Audio Clip Triangular 的完整变换分别由式 (2)—(5) 给出，各式采用相应的辅助增益函数计算左右输入到左右输出的关系。
 
 两类控制的结构区别在于交叉混合：Audio Clip 分别改变两声道增益；Mixer 将另一侧信号混入偏转侧，并在极端声像处形成加权单声道和。Circular 与 Triangular 分别采用三角函数和分段线性系数。它们在居中处均保持输入，在同相同幅双声道输入下表现出相同控制位置间的等价性。
 
-逐样本比较与消参关系检验共同支持上述公式：全范围前向最大绝对残差低于 $6.1\times10^{-5}$，Mixer 输出关系最大绝对残差低于 $8.5\times10^{-6}$。公式进一步解释了 Circular 的功率补偿、Mixer 全偏求和的比例，以及 Mixer Circular 单侧输入响应中的 $+0.423\,\text{dB}$ 内部峰值，补全了官方定性说明所缺少的具体变换关系。
+逐样本比较与消参关系检验共同支持上述公式：全范围前向最大绝对残差低于 $6.1\times10^{-5}$，Mixer 输出关系最大绝对残差低于 $8.5\times10^{-6}$。公式进一步解释了 Circular 的功率补偿、Mixer 在全偏时的求和比例，以及 Mixer Circular 单侧输入响应中的 $+0.423\,\text{dB}$ 内部峰值，补全了官方定性说明所缺少的具体变换关系。
 
 ## 8. 从实验辨识到实现验证
 
