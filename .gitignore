@@ -11,3 +11,6 @@ wheels/
 
 # Peak files
 *.pkf
+
+# Ignore generated png for smaller repository size
+images/figures/*.png
