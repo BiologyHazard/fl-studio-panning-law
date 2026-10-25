@@ -2,7 +2,7 @@
 
 正式报告：[FL Studio Panning Law](REPORT.md)。
 
-本项目研究 Mixer 与 Audio Clip Channel panning 在 Circular / Triangular 设置下的双声道变换。实验使用的软件版本为 FL Studio 20.8.3.2304；每种条件使用同一份左声道单位直流输入，进行 8 秒的全范围声像扫描。
+本项目研究 Mixer 与 Channel 两类声像控制 在 Circular / Triangular 设置下的双声道变换。实验使用的软件版本为 FL Studio 20.8.3.2304；每种条件使用同一份左声道单位直流输入，进行 8 秒的全范围声像扫描。
 
 ## 目录
 

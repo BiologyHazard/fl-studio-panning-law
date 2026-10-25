@@ -80,7 +80,7 @@
       },
       "identity_samples": 191999
     },
-    "Audio Clip Circular": {
+    "Channel Circular": {
       "rate": 48000,
       "frames": 384000,
       "duration_s": 8.0,
@@ -112,7 +112,7 @@
         }
       ]
     },
-    "Audio Clip Triangular": {
+    "Channel Triangular": {
       "rate": 48000,
       "frames": 384000,
       "duration_s": 8.0,
@@ -149,10 +149,10 @@
     "input-wav-file/Left Channel DC.wav": "9f8fab9e169fe8fe5db276d5fdca2425267c2f97c5164404c5906767d8ee84a9",
     "output-wav-files/Mixer Circular Panning.wav": "9e2a62bac3ccc8c573e93acb4c3c320b6ac24b6447ee907be4afc8100ca20fbe",
     "output-wav-files/Mixer Triangular Panning.wav": "ae05fb3e8271cf198f5aa2c59c38ee22ce92e4c8c0508980a7f19f719f76706b",
-    "output-wav-files/Audio Clip Circular Panning.wav": "0e5099a691913a7ce0e441791f0ae512eab11ff1f1e73aa4e9fed831e421b6a0",
-    "output-wav-files/Audio Clip Triangular Panning.wav": "6fa8020085e5c92852af76d67eac1d2ab8fc6d800b2ac7aeecc52ed83af3e5e4",
-    "fl-studio-projects/Audio Clip Circular Panning.flp": "7fc2d4e2db1c858c66a25854f17f0896ddec08fb095dbab3d0fe98ab1af684ec",
-    "fl-studio-projects/Audio Clip Triangular Panning.flp": "80f2ac45cac33c944ca76ed3ff63f2fb026f73a14536548de7db28dfb81e9e4b",
+    "output-wav-files/Channel Circular Panning.wav": "0e5099a691913a7ce0e441791f0ae512eab11ff1f1e73aa4e9fed831e421b6a0",
+    "output-wav-files/Channel Triangular Panning.wav": "6fa8020085e5c92852af76d67eac1d2ab8fc6d800b2ac7aeecc52ed83af3e5e4",
+    "fl-studio-projects/Channel Circular Panning.flp": "102077f3bd6e8a771548dc049e310de86bb6b95ec030d4e7de75a3478d46843c",
+    "fl-studio-projects/Channel Triangular Panning.flp": "80f2ac45cac33c944ca76ed3ff63f2fb026f73a14536548de7db28dfb81e9e4b",
     "fl-studio-projects/Mixer Circular Panning.flp": "41c5fdbf25a7b83f2bfebc78750ab103813ece991a3df61fbf3edfaa4ff0fb79",
     "fl-studio-projects/Mixer Triangular Panning.flp": "15b0096f19fbf76de21cf0a081e851a7b1b6105653fd75ea009a9260c22caeaf"
   },

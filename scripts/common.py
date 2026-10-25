@@ -38,7 +38,7 @@ class Case:
 
 
 CASES = tuple(
-    Case(c, law) for c in ("Mixer", "Audio Clip") for law in ("Circular", "Triangular")
+    Case(c, law) for c in ("Mixer", "Channel") for law in ("Circular", "Triangular")
 )
 
 
@@ -79,7 +79,7 @@ def matrix(pan: np.ndarray, case: Case) -> np.ndarray:
     p = np.asarray(pan, dtype=np.float64)
     u, v = gains(p, case.law)
     a = np.zeros((*p.shape, 2, 2))
-    if case.control == "Audio Clip":
+    if case.control == "Channel":
         a[..., 0, 0], a[..., 1, 1] = u, v
     elif case.control == "Mixer":
         a[..., 0, 0] = np.where(p <= 0, u * (1 + v) / 2, u)
