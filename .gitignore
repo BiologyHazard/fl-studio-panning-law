@@ -9,6 +9,5 @@ wheels/
 # Virtual environments
 .venv
 
-# Numeric / analysis scratch
-*.npy
-*.npz
+# Peak files
+*.pkf
