@@ -1,4 +1,4 @@
-"""Report Figure 12: cross-output tests independent of the nominal pan ramp."""
+"""Report Figure 13: cross-output tests independent of the nominal pan ramp."""
 
 import matplotlib.pyplot as plt
 import numpy as np

@@ -1,4 +1,4 @@
-"""Report Figure 13: model power relationships and the interior amplitude peak."""
+"""Report Figure 14: model power relationships and the interior amplitude peak."""
 
 import matplotlib.pyplot as plt
 import numpy as np

@@ -1,4 +1,4 @@
-"""Report Figure 11: all-sample residual envelopes and full-sample time detail."""
+"""Report Figure 12: all-sample residual envelopes and full-sample time detail."""
 
 import matplotlib.pyplot as plt
 import numpy as np

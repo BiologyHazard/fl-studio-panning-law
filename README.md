@@ -10,11 +10,11 @@
 
 | 路径                                           | 用途                                                           |
 | ---------------------------------------------- | -------------------------------------------------------------- |
-| `REPORT.md`                                    | 正式报告：官方文档摘录、实验设置、四种完整公式、数据验证与结论 |
+| `REPORT.md`                                    | 正式报告：公式总览、官方文档摘录、实验与导出设置、数据验证及结论 |
 | `fl-studio-projects/`                          | 四个 FL Studio 实验工程                                        |
 | `input-wav-file/`                              | 左声道单位直流输入 WAV                                         |
 | `output-wav-files/`                            | 四种条件的原始输出 WAV                                         |
-| `images/*.png`                                 | 八张原始实验截图，均已嵌入报告                                 |
+| `images/*.png`                                 | 九张原始实验截图，均已嵌入报告                                 |
 | `images/figures/`                              | 五张程序生成的分析图，每图包含 PNG 与 SVG                      |
 | `results/statistics.json`                      | 全精度残差、输出极值、原始文件 SHA-256           |
 | `scripts/`                                     | 数据分析、单图绘制及输入生成代码                               |
@@ -40,11 +40,11 @@ uv run python scripts/build.py
 | `scripts/build.py`                | 统一入口，运行统计与全部绘图               |
 | `scripts/analyze.py`              | 统计、输出关系检验、峰值解析量及文件哈希   |
 | `scripts/common.py`               | WAV 读取、声像坐标、矩阵模型与公共绘图样式 |
-| `scripts/fig_response.py`         | 报告图 9：实测响应与公式对比               |
-| `scripts/fig_matrix.py`           | 报告图 10：四个矩阵系数                    |
-| `scripts/fig_residual.py`         | 报告图 11：全样本残差包络及局部波形        |
-| `scripts/fig_identity.py`         | 报告图 12：消去声像参数的输出关系          |
-| `scripts/fig_consequences.py`     | 报告图 13：功率关系与内部峰值              |
+| `scripts/fig_response.py`         | 报告图 10：实测响应与公式对比               |
+| `scripts/fig_matrix.py`           | 报告图 11：四个矩阵系数                    |
+| `scripts/fig_residual.py`         | 报告图 12：全样本残差包络及局部波形        |
+| `scripts/fig_identity.py`         | 报告图 13：消去声像参数的输出关系          |
+| `scripts/fig_consequences.py`     | 报告图 14：功率关系与内部峰值              |
 | `scripts/make_left_channel_dc.py` | 生成单位左声道直流输入材料                 |
 
 例如：

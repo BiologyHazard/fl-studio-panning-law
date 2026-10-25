@@ -1,4 +1,4 @@
-"""Report Figure 9: directly observed first column against the model."""
+"""Report Figure 10: directly observed first column against the model."""
 
 import matplotlib.pyplot as plt
 import numpy as np
