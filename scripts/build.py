@@ -1,10 +1,10 @@
 """Regenerate report evidence; paths are independent of the working directory."""
 
 import analyze
-import fig_power
-import fig_peak
 import fig_identity
 import fig_matrix
+import fig_peak
+import fig_power
 import fig_residual
 import fig_response
 
