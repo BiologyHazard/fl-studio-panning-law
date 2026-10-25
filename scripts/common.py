@@ -109,17 +109,13 @@ def style() -> None:
             "font.family": "serif",
             "font.serif": ["cmr10"],
             "mathtext.fontset": "cm",
-            "font.size": 10,
             "axes.formatter.use_mathtext": True,
-            "axes.spines.top": False,
-            "axes.spines.right": False,
             "axes.grid": True,
-            "grid.alpha": 0.18,
+            "xtick.minor.visible": True,
+            "ytick.minor.visible": True,
             "axes.axisbelow": True,
-            "legend.frameon": False,
             "figure.constrained_layout.use": True,
-            "savefig.dpi": 180,
-            "svg.fonttype": "path",
+            "savefig.dpi": 300,
         }
     )
 

@@ -46,7 +46,7 @@ wheels = [
 ]
 
 [[package]]
-name = "fl-studio-pan-rule"
+name = "fl-studio-panning-law"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

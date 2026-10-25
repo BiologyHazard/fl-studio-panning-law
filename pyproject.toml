@@ -1,6 +1,7 @@
 [project]
-name = "fl-studio-pan-rule"
+name = "fl-studio-panning-law"
 version = "0.1.0"
+readme = "README.md"
 requires-python = ">=3.15"
 dependencies = [
     "matplotlib>=3.11.2",
