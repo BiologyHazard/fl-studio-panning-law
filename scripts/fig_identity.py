@@ -28,16 +28,17 @@ def main():
             label="Measured pairs",
         )
         _, e = identity_residual(case)
-        axes[row, 1].hist(e * 1e6, bins=80, color=COLORS[0], alpha=0.8)
+        axes[row, 1].hist(e, bins=80, color=COLORS[0], alpha=0.8)
         axes[row, 0].set(
             title=case.name, xlabel="Measured left output", ylabel="Right output"
         )
         axes[row, 1].set(
             title="All positive-pan samples",
-            xlabel="Relation residual ($10^{-6}$)",
+            xlabel="Relation residual",
             ylabel="Sample count",
         )
         axes[row, 1].ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+        axes[row, 1].ticklabel_format(axis="x", style="sci", scilimits=(0, 0), useOffset=False)
     axes[0, 0].legend()
     save(fig, "04-identity")
 
