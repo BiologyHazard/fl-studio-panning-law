@@ -1,22 +1,24 @@
 # FL Studio Panning Law 实验研究
 
-正式报告：[FL Studio 双声道声像法则的实验辨识](REPORT.md)。
+正式报告：[FL Studio Panning Law](REPORT.md)。
 
-本项目研究 Mixer Master 与 Audio Clip Channel panning 在 Circular / Triangular 设置下的双声道变换。实验工程版本为 FL Studio 20.8.3.2304；每种条件使用同一份左声道单位直流输入，进行 8 秒的全范围声像扫描。
+本项目研究 Mixer Master 与 Audio Clip Channel panning 在 Circular / Triangular 设置下的双声道变换。实验使用的软件版本为 FL Studio 20.8.3.2304；每种条件使用同一份左声道单位直流输入，进行 8 秒的全范围声像扫描。
+
+代码仓库：[BiologyHazard/fl-studio-panning-law](https://github.com/BiologyHazard/fl-studio-panning-law)。
 
 ## 目录
 
-| 路径 | 用途 |
-|---|---|
-| `REPORT.md` | 正式报告：官方文档摘录、实验设置、四种完整公式、数据验证与结论 |
-| `fl-studio-projects/` | 四个 FL Studio 实验工程 |
-| `input-wav-file/` | 左声道单位直流输入 WAV |
-| `output-wav-files/` | 四种条件的原始输出 WAV |
-| `images/*.png` | 八张原始实验截图，均已嵌入报告 |
-| `images/figures/` | 五张程序生成的分析图，每图包含 PNG 与 SVG |
-| `results/statistics.json` | 全精度残差、输出极值、端点约定比较及原始文件 SHA-256 |
-| `scripts/` | 数据分析、单图绘制及输入生成代码 |
-| `pyproject.toml`、`uv.lock`、`.python-version` | Python 环境与锁定依赖 |
+| 路径                                           | 用途                                                           |
+| ---------------------------------------------- | -------------------------------------------------------------- |
+| `REPORT.md`                                    | 正式报告：官方文档摘录、实验设置、四种完整公式、数据验证与结论 |
+| `fl-studio-projects/`                          | 四个 FL Studio 实验工程                                        |
+| `input-wav-file/`                              | 左声道单位直流输入 WAV                                         |
+| `output-wav-files/`                            | 四种条件的原始输出 WAV                                         |
+| `images/*.png`                                 | 八张原始实验截图，均已嵌入报告                                 |
+| `images/figures/`                              | 五张程序生成的分析图，每图包含 PNG 与 SVG                      |
+| `results/statistics.json`                      | 全精度残差、输出极值、端点约定比较及原始文件 SHA-256           |
+| `scripts/`                                     | 数据分析、单图绘制及输入生成代码                               |
+| `pyproject.toml`、`uv.lock`、`.python-version` | Python 环境与锁定依赖                                          |
 
 原始 WAV、FLP 和截图属于实验资料。`images/figures/` 与 `results/statistics.json` 是可由脚本重新生成的研究产物；保留它们便于直接阅读报告、复核数字及核对数据版本。`.venv/` 是本地 Python 环境，隐藏工具配置目录独立于研究资料。
 
@@ -33,17 +35,17 @@ uv run python scripts/build.py
 
 ## 分析与单图入口
 
-| 脚本 | 功能 |
-|---|---|
-| `scripts/build.py` | 统一入口，运行统计与全部绘图 |
-| `scripts/analyze.py` | 统计、输出关系检验、峰值解析量及文件哈希 |
-| `scripts/common.py` | WAV 读取、声像坐标、矩阵模型与公共绘图样式 |
-| `scripts/fig_response.py` | 报告图 5：实测响应与公式对比 |
-| `scripts/fig_matrix.py` | 报告图 6：四个矩阵系数 |
-| `scripts/fig_residual.py` | 报告图 7：全样本残差包络及局部波形 |
-| `scripts/fig_identity.py` | 报告图 8：消去声像参数的输出关系 |
-| `scripts/fig_consequences.py` | 报告图 9：功率关系与内部峰值 |
-| `scripts/make_left_channel_dc.py` | 生成单位左声道直流输入材料 |
+| 脚本                              | 功能                                       |
+| --------------------------------- | ------------------------------------------ |
+| `scripts/build.py`                | 统一入口，运行统计与全部绘图               |
+| `scripts/analyze.py`              | 统计、输出关系检验、峰值解析量及文件哈希   |
+| `scripts/common.py`               | WAV 读取、声像坐标、矩阵模型与公共绘图样式 |
+| `scripts/fig_response.py`         | 报告图 9：实测响应与公式对比               |
+| `scripts/fig_matrix.py`           | 报告图 10：四个矩阵系数                    |
+| `scripts/fig_residual.py`         | 报告图 11：全样本残差包络及局部波形        |
+| `scripts/fig_identity.py`         | 报告图 12：消去声像参数的输出关系          |
+| `scripts/fig_consequences.py`     | 报告图 13：功率关系与内部峰值              |
+| `scripts/make_left_channel_dc.py` | 生成单位左声道直流输入材料                 |
 
 例如：
 

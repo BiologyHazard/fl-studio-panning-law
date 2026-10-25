@@ -3,14 +3,16 @@
 Run the individual fig_*.py files directly, or run build.py for all outputs.
 No coefficients or time offsets are fitted to the recordings.
 """
+
 from __future__ import annotations
 
+import wave
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-import wave
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,14 +37,19 @@ class Case:
         return ROOT / "output-wav-files" / f"{self.name} Panning.wav"
 
 
-CASES = tuple(Case(c, law) for c in ("Mixer", "Audio Clip")
-              for law in ("Circular", "Triangular"))
+CASES = tuple(
+    Case(c, law) for c in ("Mixer", "Audio Clip") for law in ("Circular", "Triangular")
+)
 
 
 @lru_cache(maxsize=8)
 def read_wav(path: Path) -> tuple[int, np.ndarray]:
     with wave.open(str(path), "rb") as stream:
-        if (stream.getnchannels(), stream.getsampwidth(), stream.getformat()) != (2, 4, 3):
+        if (stream.getnchannels(), stream.getsampwidth(), stream.getformat()) != (
+            2,
+            4,
+            3,
+        ):
             raise ValueError(f"Expected stereo IEEE float32: {path}")
         rate, count = stream.getframerate(), stream.getnframes()
         data = np.frombuffer(stream.readframes(count), dtype="<f4").reshape(-1, 2)
@@ -90,17 +97,31 @@ def measured(case: Case) -> tuple[np.ndarray, np.ndarray]:
 
 
 def errors(values: np.ndarray) -> dict[str, float]:
-    return {"max_abs": float(np.max(np.abs(values))),
-            "rms": float(np.sqrt(np.mean(values ** 2)))}
+    return {
+        "max_abs": float(np.max(np.abs(values))),
+        "rms": float(np.sqrt(np.mean(values**2))),
+    }
 
 
 def style() -> None:
-    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10,
-                        "axes.spines.top": False, "axes.spines.right": False,
-                        "axes.grid": True, "grid.alpha": .18,
-                        "axes.axisbelow": True, "legend.frameon": False,
-                        "figure.constrained_layout.use": True,
-                        "savefig.dpi": 180, "svg.fonttype": "none"})
+    plt.rcParams.update(
+        {
+            "font.family": "serif",
+            "font.serif": ["cmr10"],
+            "mathtext.fontset": "cm",
+            "font.size": 10,
+            "axes.formatter.use_mathtext": True,
+            "axes.spines.top": False,
+            "axes.spines.right": False,
+            "axes.grid": True,
+            "grid.alpha": 0.18,
+            "axes.axisbelow": True,
+            "legend.frameon": False,
+            "figure.constrained_layout.use": True,
+            "savefig.dpi": 180,
+            "svg.fonttype": "path",
+        }
+    )
 
 
 def save(fig: plt.Figure, stem: str) -> None:

@@ -1,4 +1,5 @@
-"""Report Figure 6: full matrix, distinguishing symmetry-derived entries."""
+"""Report Figure 10: full matrix, distinguishing symmetry-derived entries."""
+
 import matplotlib.pyplot as plt
 import numpy as np
 from common import CASES, COLORS, matrix, save, style
@@ -10,13 +11,23 @@ def main():
     fig, axes = plt.subplots(2, 2, figsize=(11, 7), sharex=True, sharey=True)
     for ax, case, letter in zip(axes.flat, CASES, "abcd"):
         a = matrix(p, case)
-        for row, col, color, ls in [(0, 0, COLORS[0], "-"), (1, 0, COLORS[1], "-"),
-                                     (1, 1, COLORS[0], "--"), (0, 1, COLORS[1], "--")]:
+        for row, col, color, ls in [
+            (0, 0, COLORS[0], "-"),
+            (1, 0, COLORS[1], "-"),
+            (1, 1, COLORS[0], "--"),
+            (0, 1, COLORS[1], "--"),
+        ]:
             origin = "first-column model" if col == 0 else "symmetry-derived"
-            ax.plot(p, a[:, row, col], color=color, ls=ls, lw=1.7,
-                    label=f"$A_{{{row+1}{col+1}}}$: {origin}")
-        ax.set(title=f"({letter}) {case.name}", xlim=(-1, 1), ylim=(-.06, 1.5))
-        ax.set_xticks([-1, -.5, 0, .5, 1])
+            ax.plot(
+                p,
+                a[:, row, col],
+                color=color,
+                ls=ls,
+                lw=1.7,
+                label=f"$A_{{{row + 1}{col + 1}}}$: {origin}",
+            )
+        ax.set(title=f"({letter}) {case.name}", xlim=(-1, 1), ylim=(-0.06, 1.5))
+        ax.set_xticks([-1, -0.5, 0, 0.5, 1])
     for ax in axes[-1]:
         ax.set_xlabel("Pan $p$")
     for ax in axes[:, 0]:

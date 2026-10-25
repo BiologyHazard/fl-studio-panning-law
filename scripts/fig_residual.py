@@ -1,4 +1,5 @@
-"""Report Figure 7: all-sample residual envelopes and full-sample time detail."""
+"""Report Figure 11: all-sample residual envelopes and full-sample time detail."""
+
 import matplotlib.pyplot as plt
 import numpy as np
 from common import CASES, COLORS, matrix, measured, read_wav, save, style
@@ -17,11 +18,18 @@ def main():
         for ch, label in enumerate(("Left", "Right")):
             lo = np.array([e[b, ch].min() for b in bins])
             hi = np.array([e[b, ch].max() for b in bins])
-            axes[row, 0].fill_between(centers, lo, hi, color=COLORS[ch], alpha=.45)
-            axes[row, 0].plot(centers, (lo + hi) / 2, color=COLORS[ch], lw=.65, label=label)
-            count = round(.1 * fs)
-            axes[row, 1].plot(np.arange(count) / fs * 1000, e[:count, ch],
-                              color=COLORS[ch], lw=.8, label=label)
+            axes[row, 0].fill_between(centers, lo, hi, color=COLORS[ch], alpha=0.45)
+            axes[row, 0].plot(
+                centers, (lo + hi) / 2, color=COLORS[ch], lw=0.65, label=label
+            )
+            count = round(0.1 * fs)
+            axes[row, 1].plot(
+                np.arange(count) / fs * 1000,
+                e[:count, ch],
+                color=COLORS[ch],
+                lw=0.8,
+                label=label,
+            )
         axes[row, 0].set_ylabel(f"{case.name}\nResidual ($10^{{-6}}$)")
         axes[row, 0].set_xlim(-1, 1)
         axes[row, 1].set_xlim(0, 100)
