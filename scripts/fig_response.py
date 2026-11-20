@@ -32,7 +32,7 @@ def main():
         ax.set(title=f"({letter}) {case.name}", xlim=(-1.03, 1.03), ylim=(-0.07, 1.52))
         ax.set_xticks([-1, -0.5, 0, 0.5, 1])
     for ax in axes[-1]:
-        ax.set_xlabel("Nominal pan $p$")
+        ax.set_xlabel("Pan $p$")
     for ax in axes[:, 0]:
         ax.set_ylabel("Output amplitude for input (1, 0)")
     handles, labels = axes[0, 0].get_legend_handles_labels()
