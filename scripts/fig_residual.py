@@ -1,4 +1,4 @@
-"""Report Figure 12: all-sample residual envelopes and full-sample time detail."""
+"""Report Figure 12: per-sample signed residuals and full-sample time detail."""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,16 +12,8 @@ def main():
         p, data = measured(case)
         fs, _ = read_wav(case.path)
         e = data - matrix(p, case)[..., :, 0]
-        # Every sample contributes to one min/max bin. No hidden stride sampling.
-        bins = np.array_split(np.arange(len(p)), 800)
-        centers = np.array([p[b].mean() for b in bins])
         for ch, label in enumerate(("Left", "Right")):
-            lo = np.array([e[b, ch].min() for b in bins])
-            hi = np.array([e[b, ch].max() for b in bins])
-            axes[row, 0].fill_between(centers, lo, hi, color=COLORS[ch], alpha=0.45)
-            axes[row, 0].plot(
-                centers, (lo + hi) / 2, color=COLORS[ch], lw=0.65, label=label
-            )
+            axes[row, 0].plot(p, e[:, ch], color=COLORS[ch], lw=0.5, label=label)
             count = round(0.1 * fs)
             axes[row, 1].plot(
                 np.arange(len(data) - count, len(data)) / fs,
@@ -32,11 +24,13 @@ def main():
             )
         axes[row, 0].set_ylabel(f"{case.name}\nResidual")
         for axis in axes[row]:
-            axis.ticklabel_format(axis="y", style="sci", scilimits=(0, 0), useOffset=False)
+            axis.ticklabel_format(
+                axis="y", style="sci", scilimits=(0, 0), useOffset=False
+            )
             axis.tick_params(axis="y", labelleft=True)
         axes[row, 0].set_xlim(-1, 1)
         axes[row, 1].set_xlim(len(data) / fs - 0.1, len(data) / fs)
-    axes[0, 0].set_title("Full sweep: min/max envelopes in 800 bins")
+    axes[0, 0].set_title("Full sweep: every sample")
     axes[0, 1].set_title("Last 100 ms: every sample")
     axes[-1, 0].set_xlabel("Nominal pan $p$")
     axes[-1, 1].set_xlabel("Time (s)")

@@ -40,7 +40,7 @@ uv run python scripts/build.py
 | `scripts/common.py`               | WAV 读取、声像坐标、矩阵模型与公共绘图样式 |
 | `scripts/fig_response.py`         | 报告图 10：实测响应与公式对比              |
 | `scripts/fig_matrix.py`           | 报告图 11：四个矩阵系数                    |
-| `scripts/fig_residual.py`         | 报告图 12：全样本残差包络及局部波形        |
+| `scripts/fig_residual.py`         | 报告图 12：逐样本残差及局部波形        |
 | `scripts/fig_identity.py`         | 报告图 13：消去声像参数的输出关系          |
 | `scripts/fig_power.py`            | 报告图 14：两种输入条件下的功率关系        |
 | `scripts/fig_peak.py`             | 报告图 15：Mixer Circular 的内部幅度峰值   |
