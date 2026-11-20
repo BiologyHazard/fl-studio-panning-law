@@ -13,7 +13,7 @@ $$
 =A(p)\begin{pmatrix}x_{\text{L}}\\x_{\text{R}}\end{pmatrix}.
 $$
 
-工程设置中，可以设置 Panning law 为 Circular 或 Triangular，不同的 Panning law 对应不同的增益矩阵；声像应用在混音器（Mixer）上还是通道（Channel）上，规则也不同。因此，增益矩阵分为 4 种情形：Mixer × Circular、Channel × Circular、Mixer × Triangular、Channel × Triangular。下面给出 4 种情形的增益矩阵公式。
+工程设置中，可以设置 Panning law 为 Circular 或 Triangular（图 1），不同的 Panning law 对应不同的增益矩阵；声像应用在混音器（Mixer）上还是通道（Channel）上，规则也不同（图 3 和图 4）。因此，增益矩阵分为 4 种情形：Mixer × Circular、Channel × Circular、Mixer × Triangular、Channel × Triangular。下面给出 4 种情形的增益矩阵公式。
 
 ### Circular
 
